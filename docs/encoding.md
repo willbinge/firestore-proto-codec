@@ -296,8 +296,7 @@ enum Kind {
   KIND_UNSPECIFIED = 0;          // infer from proto type
   KIND_REFERENCE = 1;            // string -> DocumentReference
   KIND_GEO_POINT = 2;            // a local lat/lng message -> GeoPoint (§3.3)
-  reserved 3;                    // was KIND_DURATION_MICROS; §3.2 needs no option
-  KIND_UNSIGNED_AS_INTEGER = 4;  // uint64/fixed64 -> Integer; throws above 2^63−1
+  KIND_UNSIGNED_AS_INTEGER = 3;  // uint64/fixed64 -> Integer; throws above 2^63−1
 }
 
 enum EnumEncoding { ENUM_ENCODING_NAME = 0; ENUM_ENCODING_NUMBER = 1; }

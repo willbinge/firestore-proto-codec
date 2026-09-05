@@ -52,13 +52,9 @@ enum Kind {
   // `longitude`.
   KIND_GEO_POINT = 2;
 
-  // 3 was KIND_DURATION_MICROS, removed as redundant: google.protobuf.Duration
-  // already maps to Integer microseconds with no annotation (§3.2).
-  reserved 3;
-
   // uint64/fixed64 -> Integer rather than String, keeping the field ordered
   // and queryable. Throws at encode time above 2^63-1 (§2.1).
-  KIND_UNSIGNED_AS_INTEGER = 4;
+  KIND_UNSIGNED_AS_INTEGER = 3;
 }
 
 enum EnumEncoding {
