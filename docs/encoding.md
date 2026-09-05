@@ -288,7 +288,7 @@ message Field {
   bool   skip = 1;               // never encoded
   string name = 2;               // stored-name override
   EnumEncoding enum_as = 3;      // NAME (default) | NUMBER
-  bool   omit_when_default = 4;  // default true
+  optional bool omit_when_default = 4;  // default true; `optional` is load-bearing
   Kind   kind = 5;
 }
 
@@ -356,10 +356,18 @@ free.
 `uint64` as a signed 64-bit integer in two's complement. A value at or above 2^63
 reads back as *negative*, so the default `toString()` produces a wrong,
 round-trip-breaking encoding. Format and parse through the unsigned path
-explicitly — in Java that is `Long.toUnsignedString` / `Long.parseUnsignedLong`;
-in Dart, check `fixnum`'s unsigned formatting API rather than assuming
-`Int64.toString()` is correct here. This is the most likely single bug in an
+explicitly: `Long.toUnsignedString` / `Long.parseUnsignedLong` in Java, and
+`Int64.toStringUnsigned()` in Dart — never `toString()`. Decoding needs the same
+care; the Dart implementation reinterprets through `BigInt.toSigned(64)` rather
+than trusting a parse helper. This is the most likely single bug in an
 implementation of §2.1, and it only shows up above 2^63.
+
+**Dart needs the descriptor for explicit presence.** `package:protobuf`
+registers a proto3 `optional` field exactly like an implicit-presence one, so
+[§6](#6-presence-and-defaults) cannot be implemented from its runtime
+reflection alone — the distinction survives only in the binary descriptor that
+generated code already carries. Implementations on other runtimes should check
+the same thing before assuming reflection is enough.
 
 One upside falls out of the string encoding: **unsigned fields are immune to the
 JavaScript 53-bit problem.** They round-trip correctly under the default JS SDK

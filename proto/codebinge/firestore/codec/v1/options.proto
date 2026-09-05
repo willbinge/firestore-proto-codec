@@ -32,7 +32,11 @@ message Field {
 
   // Default true: omit singular scalar fields holding their default value (§6).
   // Set false where an index or security rule depends on the field existing.
-  bool omit_when_default = 4;
+  //
+  // Explicit presence is required. The intended default is true, and a proto3
+  // implicit-presence bool would not serialize `false`, leaving "set to false"
+  // indistinguishable from "not set".
+  optional bool omit_when_default = 4;
 
   // Overrides the encoding inferred from the proto type.
   Kind kind = 5;

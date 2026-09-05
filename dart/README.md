@@ -1,0 +1,90 @@
+# firestore_proto_codec (Dart)
+
+Dart implementation of the [encoding spec](../docs/encoding.md). Passes all 23
+[conformance vectors](../testdata/).
+
+```dart
+final codec = FirestoreProtoCodec();
+
+await doc.set(codec.encode(task));                    // whole document
+await doc.set({'task': codec.encode(task)});          // one field
+final task = codec.decode(snapshot.data()!, Task());  // and back
+```
+
+`encode` returns a `Map<String, Object?>` of plain Dart values — `String`,
+`int`, `double`, `bool`, `List`, `Map` — plus whatever the [`FirestoreTypes`]
+adapter produces for the three types protobuf cannot express.
+
+## Binding to an SDK
+
+The default adapter emits dependency-free `FsTimestamp` / `FsBlob` /
+`FsGeoPoint`. Supply your own to write straight to Firestore:
+
+```dart
+class CloudFirestoreTypes implements FirestoreTypes {
+  @override
+  Object timestamp(int seconds, int nanos) => Timestamp(seconds, nanos);
+  @override
+  Object blob(Uint8List bytes) => Blob(bytes);
+  @override
+  Object geoPoint(double lat, double lng) => GeoPoint(lat, lng);
+
+  @override
+  ({int seconds, int nanos})? readTimestamp(Object v) => v is Timestamp
+      ? (seconds: v.seconds, nanos: v.nanoseconds)
+      : null;
+  @override
+  Uint8List? readBlob(Object v) => v is Blob ? v.bytes : null;
+  @override
+  ({double latitude, double longitude})? readGeoPoint(Object v) =>
+      v is GeoPoint ? (latitude: v.latitude, longitude: v.longitude) : null;
+}
+
+final codec = FirestoreProtoCodec(types: CloudFirestoreTypes());
+```
+
+Keeping this an interface is why the core has no Firebase dependency and can be
+tested off-device.
+
+## When you must register a descriptor
+
+Field *names* come from reflection and need no setup. Two things do not survive
+into `BuilderInfo`, and for those the codec reads the binary descriptor that the
+generated `.pbjson.dart` already contains:
+
+```dart
+final registry = SchemaRegistry()
+  ..register(Unsigned(), unsignedDescriptor)
+  ..register(Presence(), presenceDescriptor);
+
+final codec = FirestoreProtoCodec(registry: registry);
+```
+
+Register a message when it uses either:
+
+1. **Custom options** from `options.proto` — `skip`, `name`, `enum_as`,
+   `omit_when_default`, `kind`.
+2. **`optional` scalars, or `oneof` members.** This one is easy to miss.
+   package:protobuf registers a proto3 `optional` field *identically* to an
+   implicit-presence one, so without the descriptor the codec cannot tell that
+   a default value should still be written. An unregistered message with
+   `optional` fields silently omits them when they hold defaults.
+
+Messages using neither need no registration.
+
+## Known limits
+
+- **Web is unsupported.** `int64` fields convert through Dart `int`, which is a
+  double on the web and loses precision above 2^53. Unsigned fields are fine —
+  they encode as strings — but the signed 64-bit path is VM/Flutter-native only.
+- **`-Dprotobuf.omit_field_names=true` breaks the encoding**, which is defined
+  in terms of proto field names. The codec throws a `StateError` naming the
+  field rather than writing a document with empty keys.
+- `KIND_REFERENCE` is not implemented; it needs a live `Firestore` instance.
+
+## Development
+
+```sh
+dart test                 # from dart/
+./dart/tool/generate.sh   # from the repo root, after changing a .proto
+```

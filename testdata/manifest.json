@@ -82,7 +82,7 @@
       "direction": "roundtrip",
       "message_file": "cases/unsigned_boundaries.message.json",
       "document_file": "cases/unsigned_boundaries.document.json",
-      "note": "The four boundary values. 2^63 is the one that separates a correct implementation from one that formatted a signed long: it reads back negative in Dart and Java. `zero` is omitted by §6; `always` carries omit_when_default:false and so is written as \"0\"."
+      "note": "The four boundary values. 2^63 is the one that separates a correct implementation from one that formatted a signed long: it reads back negative in Dart and Java. `zero` and `always` are left out of the input rather than written as \"0\": an implicit-presence field assigned its default is indistinguishable from an unset one in proto3, and runtimes disagree about whether it serializes, so spelling it out would make this vector language-specific. Both are still 0. `zero` is omitted from the document by §6; `always` carries omit_when_default:false and so is written as \"0\"."
     },
     {
       "name": "unsigned_leading_zeros",
