@@ -1,0 +1,5 @@
+{
+  "nan_field": "NaN",
+  "pos_inf_field": "Infinity",
+  "neg_inf_field": "-Infinity"
+}

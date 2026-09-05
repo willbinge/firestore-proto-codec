@@ -1,0 +1,32 @@
+// Copyright 2026 Code Binge LLC
+
+// Schemas a conforming implementation must REJECT, at generation or
+// registration time rather than at encode time.
+//
+// Kept in a separate file on purpose: an implementation that rejects these at
+// load time would otherwise fail to load testdata.proto along with them.
+
+syntax = "proto3";
+
+package codebinge.firestore.codec.testdata.v1;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/struct.proto";
+
+option java_package = "com.codebinge.firestore.codec.testdata.v1";
+option java_multiple_files = true;
+
+// Non-string map keys are rejected rather than stringified (§5).
+message IntKeyMap {
+  map<int32, string> bad = 1;
+}
+
+// google.protobuf.Any is not supported (§3.4).
+message AnyField {
+  google.protobuf.Any bad = 1;
+}
+
+// google.protobuf.Struct is not supported (§3.4).
+message StructField {
+  google.protobuf.Struct bad = 1;
+}

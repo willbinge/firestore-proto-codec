@@ -296,7 +296,7 @@ enum Kind {
   KIND_UNSPECIFIED = 0;          // infer from proto type
   KIND_REFERENCE = 1;            // string -> DocumentReference
   KIND_GEO_POINT = 2;            // a local lat/lng message -> GeoPoint (§3.3)
-  KIND_DURATION_MICROS = 3;
+  reserved 3;                    // was KIND_DURATION_MICROS; §3.2 needs no option
   KIND_UNSIGNED_AS_INTEGER = 4;  // uint64/fixed64 -> Integer; throws above 2^63−1
 }
 
@@ -369,31 +369,42 @@ requires `useBigInt`.
 
 ## 9. Conformance
 
-**The only thing that keeps implementations aligned.** Paired files:
+**The only thing that keeps implementations aligned.** The suite lives in
+[`testdata/`](../testdata/) and is driven by `testdata/manifest.json`, which
+names for each case a message type, a direction, and either the files to compare
+or the error to expect.
 
-```
-testdata/
-  full.textproto        # a message in text format
-  full.json             # expected encoding, Firestore REST Value JSON
-  defaults.textproto    # every field at its default
-  defaults.json         # → {}
-```
+| Direction | Assertion |
+|---|---|
+| `roundtrip` | `encode(message) == document` and `decode(document) == message` |
+| `encode` | `encode(message) == document`, or raises the expected error |
+| `decode` | `decode(document) == message`, or raises the expected error |
+| `schema` | registering the named message type raises the expected error |
 
-Expected output is expressed in Firestore's REST `Value` JSON
-(`{"integerValue": "42"}` vs `{"doubleValue": 42}`) because plain JSON cannot
-distinguish integer from double, and that distinction is the whole point of §2.
+Inputs are **proto3 JSON**, not text format: text format has no parser in the
+Dart runtime or in protobuf-es, so a `.textproto` fixture would be unreadable in
+two of the three target languages. Expected output is **Firestore REST `Value`
+JSON**, which names the Firestore type explicitly — plain JSON cannot distinguish
+an integer from a double, and that distinction is most of [§2](#2-scalar-types).
 
-Required coverage: every scalar type; both enum encodings; a decode of an unknown
-enum name; all-defaults; explicit presence set and unset; a `Timestamp` with
-sub-microsecond nanos; a nested message; a repeated scalar; a repeated message; a
-`map<string, V>`; a 21-level nesting overflow; unsigned round-trips at `0`,
-`2^63−1`, `2^63`, and `2^64−1`; decode rejection for malformed unsigned strings
-(leading zeros, a sign, non-digits, and above `2^64−1`); and a rejection case for
-non-string map keys.
+Errors are reported by name from a fixed set: `UNSIGNED_MALFORMED`,
+`UNSIGNED_OUT_OF_RANGE`, `UNSIGNED_NOT_REPRESENTABLE`, `LATLNG_OUT_OF_RANGE`,
+`NESTING_TOO_DEEP`, `UNSUPPORTED_MAP_KEY`, `UNSUPPORTED_TYPE`. An implementation
+may raise whatever exception type it likes, so long as it maps to these.
 
-The four unsigned boundary values are the important ones — an implementation that
-handles `0` and `2^64−1` but gets `2^63` wrong is the expected failure, since
-that is exactly where the signed representation goes negative.
+Coverage: every scalar type; NaN and both infinities; both enum encodings and an
+unknown enum name; all-defaults; explicit presence set and unset; unsigned
+round-trips at `0`, `2^63−1`, `2^63`, and `2^64−1` plus four decode rejections
+and an encode rejection; a `Timestamp` with sub-microsecond nanos; `Duration`;
+`LatLng` and an out-of-range rejection; nested, repeated, and map fields; the
+`skip` and `name` options; nesting at depth 20 and 21; and three schemas that
+must be rejected outright.
 
-**Write these before writing a codec.** They are useful even if a mapping stays
-hand-written, and they are what makes "conforming implementation" mean anything.
+The four unsigned boundary values are the ones to understand first — an
+implementation that handles `0` and `2^64−1` but gets `2^63` wrong is the
+expected failure, since that is exactly where a signed 64-bit representation goes
+negative.
+
+**These come before a codec, not after.** They are useful even where a mapping
+stays hand-written, and they are what makes "conforming implementation" mean
+something.

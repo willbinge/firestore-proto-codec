@@ -1,0 +1,124 @@
+// Copyright 2026 Code Binge LLC
+
+// Message definitions for the conformance vectors. Not part of the library:
+// these exist only so implementations have a shared schema to encode against.
+
+syntax = "proto3";
+
+package codebinge.firestore.codec.testdata.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "google/type/latlng.proto";
+import "codebinge/firestore/codec/v1/options.proto";
+
+option java_package = "com.codebinge.firestore.codec.testdata.v1";
+option java_multiple_files = true;
+
+// Every scalar type in one message (§2).
+message Scalars {
+  string string_field = 1;
+  bool bool_field = 2;
+  bytes bytes_field = 3;
+  int32 int32_field = 4;
+  sint32 sint32_field = 5;
+  sfixed32 sfixed32_field = 6;
+  uint32 uint32_field = 7;
+  fixed32 fixed32_field = 8;
+  int64 int64_field = 9;
+  sint64 sint64_field = 10;
+  sfixed64 sfixed64_field = 11;
+  uint64 uint64_field = 12;
+  fixed64 fixed64_field = 13;
+  double double_field = 14;
+
+  // Exactly representable in binary32, so widening to double introduces no
+  // noise. A value like 0.1 would encode as 0.10000000149011612 and make the
+  // vector a test of float precision rather than of this codec.
+  float float_field = 15;
+}
+
+// NaN and the infinities, which Firestore supports natively (§2).
+message Doubles {
+  double nan_field = 1;
+  double pos_inf_field = 2;
+  double neg_inf_field = 3;
+}
+
+enum Status {
+  STATUS_UNKNOWN = 0;
+  STATUS_ACTIVE = 1;
+  STATUS_ARCHIVED = 2;
+}
+
+// Both enum encodings (§4).
+message Enums {
+  Status as_name = 1;
+
+  Status as_number = 2 [(codebinge.firestore.codec.v1.field) = {
+    enum_as: ENUM_ENCODING_NUMBER
+  }];
+}
+
+message Inner {
+  string value = 1;
+}
+
+// Explicit presence (§6). `optional` scalars and singular message fields are
+// written even when they hold a default, and omitted when unset.
+message Presence {
+  optional string opt_string = 1;
+  optional int32 opt_int32 = 2;
+  Inner inner = 3;
+}
+
+// Unsigned 64-bit boundaries (§2.1).
+message Unsigned {
+  uint64 zero = 1;
+  uint64 max_signed = 2;         // 2^63-1, the largest Firestore integer
+  uint64 min_unsigned_only = 3;  // 2^63, the first value that does not fit
+  uint64 max_unsigned = 4;       // 2^64-1
+  fixed64 fixed = 5;
+
+  uint64 as_integer = 6 [(codebinge.firestore.codec.v1.field) = {
+    kind: KIND_UNSIGNED_AS_INTEGER
+  }];
+
+  uint64 always = 7 [(codebinge.firestore.codec.v1.field) = {
+    omit_when_default: false
+  }];
+}
+
+// Well-known and common types (§3).
+message WellKnown {
+  google.protobuf.Timestamp timestamp = 1;
+  google.protobuf.Duration duration = 2;
+  google.type.LatLng location = 3;
+}
+
+// Nested messages, repeated fields, and maps (§5).
+message Composite {
+  Inner single = 1;
+  repeated string strings = 2;
+  repeated Inner messages = 3;
+  map<string, string> string_map = 4;
+  map<string, Inner> message_map = 5;
+}
+
+// The `skip` and `name` options (§7).
+message Options {
+  string kept = 1;
+
+  string dropped = 2 [(codebinge.firestore.codec.v1.field) = { skip: true }];
+
+  string renamed = 3 [(codebinge.firestore.codec.v1.field) = {
+    name: "stored_name"
+  }];
+}
+
+// Nesting depth (§5). A chain of N `child` values puts the innermost map at
+// depth N; Firestore's limit is 20.
+message Recursive {
+  string label = 1;
+  Recursive child = 2;
+}

@@ -1,0 +1,11 @@
+{
+  "nan_field": {
+    "doubleValue": "NaN"
+  },
+  "pos_inf_field": {
+    "doubleValue": "Infinity"
+  },
+  "neg_inf_field": {
+    "doubleValue": "-Infinity"
+  }
+}

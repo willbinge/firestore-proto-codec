@@ -1,0 +1,17 @@
+{
+  "string_field": "hello",
+  "bool_field": true,
+  "bytes_field": "AAH/",
+  "int32_field": -2147483648,
+  "sint32_field": -1,
+  "sfixed32_field": 2147483647,
+  "uint32_field": 4294967295,
+  "fixed32_field": 42,
+  "int64_field": "-9223372036854775808",
+  "sint64_field": "-1",
+  "sfixed64_field": "9223372036854775807",
+  "uint64_field": "18446744073709551615",
+  "fixed64_field": "9223372036854775808",
+  "double_field": 3.14159,
+  "float_field": 1.5
+}

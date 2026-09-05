@@ -1,0 +1,47 @@
+{
+  "string_field": {
+    "stringValue": "hello"
+  },
+  "bool_field": {
+    "booleanValue": true
+  },
+  "bytes_field": {
+    "bytesValue": "AAH/"
+  },
+  "int32_field": {
+    "integerValue": "-2147483648"
+  },
+  "sint32_field": {
+    "integerValue": "-1"
+  },
+  "sfixed32_field": {
+    "integerValue": "2147483647"
+  },
+  "uint32_field": {
+    "integerValue": "4294967295"
+  },
+  "fixed32_field": {
+    "integerValue": "42"
+  },
+  "int64_field": {
+    "integerValue": "-9223372036854775808"
+  },
+  "sint64_field": {
+    "integerValue": "-1"
+  },
+  "sfixed64_field": {
+    "integerValue": "9223372036854775807"
+  },
+  "uint64_field": {
+    "stringValue": "18446744073709551615"
+  },
+  "fixed64_field": {
+    "stringValue": "9223372036854775808"
+  },
+  "double_field": {
+    "doubleValue": 3.14159
+  },
+  "float_field": {
+    "doubleValue": 1.5
+  }
+}

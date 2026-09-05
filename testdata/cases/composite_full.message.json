@@ -1,0 +1,23 @@
+{
+  "single": {
+    "value": "a"
+  },
+  "strings": [
+    "x",
+    "y"
+  ],
+  "messages": [
+    {
+      "value": "m1"
+    },
+    {}
+  ],
+  "string_map": {
+    "k": "v"
+  },
+  "message_map": {
+    "k": {
+      "value": "mv"
+    }
+  }
+}

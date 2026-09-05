@@ -1,0 +1,67 @@
+{
+  "single": {
+    "mapValue": {
+      "fields": {
+        "value": {
+          "stringValue": "a"
+        }
+      }
+    }
+  },
+  "strings": {
+    "arrayValue": {
+      "values": [
+        {
+          "stringValue": "x"
+        },
+        {
+          "stringValue": "y"
+        }
+      ]
+    }
+  },
+  "messages": {
+    "arrayValue": {
+      "values": [
+        {
+          "mapValue": {
+            "fields": {
+              "value": {
+                "stringValue": "m1"
+              }
+            }
+          }
+        },
+        {
+          "mapValue": {
+            "fields": {}
+          }
+        }
+      ]
+    }
+  },
+  "string_map": {
+    "mapValue": {
+      "fields": {
+        "k": {
+          "stringValue": "v"
+        }
+      }
+    }
+  },
+  "message_map": {
+    "mapValue": {
+      "fields": {
+        "k": {
+          "mapValue": {
+            "fields": {
+              "value": {
+                "stringValue": "mv"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "version": 1,
+  "schema": {
+    "valid": "schema/testdata.proto",
+    "invalid": "schema/invalid.proto"
+  },
+  "directions": {
+    "roundtrip": "encode(message) == document AND decode(document) == message",
+    "encode": "encode(message) == document, or raises expect_error",
+    "decode": "decode(document) == message, or raises expect_error",
+    "schema": "registering the named message type raises expect_error"
+  },
+  "errors": [
+    "UNSIGNED_MALFORMED",
+    "UNSIGNED_OUT_OF_RANGE",
+    "UNSIGNED_NOT_REPRESENTABLE",
+    "LATLNG_OUT_OF_RANGE",
+    "NESTING_TOO_DEEP",
+    "UNSUPPORTED_MAP_KEY",
+    "UNSUPPORTED_TYPE"
+  ],
+  "cases": [
+    {
+      "name": "scalars_full",
+      "message": "codebinge.firestore.codec.testdata.v1.Scalars",
+      "direction": "roundtrip",
+      "message_file": "cases/scalars_full.message.json",
+      "document_file": "cases/scalars_full.document.json",
+      "note": "Every scalar type at a boundary or otherwise notable value. Note int64 is an Integer while uint64/fixed64 are Strings, and float widens to doubleValue."
+    },
+    {
+      "name": "scalars_defaults",
+      "message": "codebinge.firestore.codec.testdata.v1.Scalars",
+      "direction": "roundtrip",
+      "message_file": "cases/scalars_defaults.message.json",
+      "document_file": "cases/scalars_defaults.document.json",
+      "note": "Every field at its default. Implicit presence means all of them are omitted, so the document is empty (§6)."
+    },
+    {
+      "name": "doubles_special",
+      "message": "codebinge.firestore.codec.testdata.v1.Doubles",
+      "direction": "roundtrip",
+      "message_file": "cases/doubles_special.message.json",
+      "document_file": "cases/doubles_special.document.json",
+      "note": "NaN and the infinities are native Firestore doubles. In REST JSON they are carried as strings because JSON numbers cannot express them."
+    },
+    {
+      "name": "enums",
+      "message": "codebinge.firestore.codec.testdata.v1.Enums",
+      "direction": "roundtrip",
+      "message_file": "cases/enums.message.json",
+      "document_file": "cases/enums.document.json",
+      "note": "Both encodings in one message: the default name string, and the NUMBER override from the field option."
+    },
+    {
+      "name": "enum_unknown_name",
+      "message": "codebinge.firestore.codec.testdata.v1.Enums",
+      "direction": "decode",
+      "document_file": "cases/enum_unknown_name.document.json",
+      "note": "A name written by a newer writer must decode to the zero value rather than throw (§4). Decode-only: re-encoding the zero value would omit the field.",
+      "message_file": "cases/enum_unknown_name.message.json"
+    },
+    {
+      "name": "presence_set",
+      "message": "codebinge.firestore.codec.testdata.v1.Presence",
+      "direction": "roundtrip",
+      "message_file": "cases/presence_set.message.json",
+      "document_file": "cases/presence_set.document.json",
+      "note": "Explicit-presence fields set to their default values are still written. This is the case that distinguishes `optional` from an implicit-presence field, and an empty message from an absent one."
+    },
+    {
+      "name": "presence_unset",
+      "message": "codebinge.firestore.codec.testdata.v1.Presence",
+      "direction": "roundtrip",
+      "message_file": "cases/presence_unset.message.json",
+      "document_file": "cases/presence_unset.document.json",
+      "note": "Nothing set, so nothing written."
+    },
+    {
+      "name": "unsigned_boundaries",
+      "message": "codebinge.firestore.codec.testdata.v1.Unsigned",
+      "direction": "roundtrip",
+      "message_file": "cases/unsigned_boundaries.message.json",
+      "document_file": "cases/unsigned_boundaries.document.json",
+      "note": "The four boundary values. 2^63 is the one that separates a correct implementation from one that formatted a signed long: it reads back negative in Dart and Java. `zero` is omitted by §6; `always` carries omit_when_default:false and so is written as \"0\"."
+    },
+    {
+      "name": "unsigned_leading_zeros",
+      "message": "codebinge.firestore.codec.testdata.v1.Unsigned",
+      "direction": "decode",
+      "document_file": "cases/unsigned_leading_zeros.document.json",
+      "expect_error": "UNSIGNED_MALFORMED",
+      "note": "Canonical form has no leading zeros."
+    },
+    {
+      "name": "unsigned_signed",
+      "message": "codebinge.firestore.codec.testdata.v1.Unsigned",
+      "direction": "decode",
+      "document_file": "cases/unsigned_signed.document.json",
+      "expect_error": "UNSIGNED_MALFORMED",
+      "note": "Canonical form has no sign."
+    },
+    {
+      "name": "unsigned_non_digits",
+      "message": "codebinge.firestore.codec.testdata.v1.Unsigned",
+      "direction": "decode",
+      "document_file": "cases/unsigned_non_digits.document.json",
+      "expect_error": "UNSIGNED_MALFORMED",
+      "note": "Decimal digits only."
+    },
+    {
+      "name": "unsigned_overflow",
+      "message": "codebinge.firestore.codec.testdata.v1.Unsigned",
+      "direction": "decode",
+      "document_file": "cases/unsigned_overflow.document.json",
+      "expect_error": "UNSIGNED_OUT_OF_RANGE",
+      "note": "2^64, one past the maximum."
+    },
+    {
+      "name": "unsigned_as_integer_overflow",
+      "message": "codebinge.firestore.codec.testdata.v1.Unsigned",
+      "direction": "encode",
+      "message_file": "cases/unsigned_as_integer_overflow.message.json",
+      "expect_error": "UNSIGNED_NOT_REPRESENTABLE",
+      "note": "KIND_UNSIGNED_AS_INTEGER must throw rather than write a negative integer."
+    },
+    {
+      "name": "wellknown",
+      "message": "codebinge.firestore.codec.testdata.v1.WellKnown",
+      "direction": "roundtrip",
+      "message_file": "cases/wellknown.message.json",
+      "document_file": "cases/wellknown.document.json",
+      "note": "The timestamp carries sub-microsecond nanos on purpose. The CODEC is exact and must round-trip all nine digits; Firestore itself truncates to microseconds on write, which is a property of the database, not of this encoding (§3.1)."
+    },
+    {
+      "name": "latlng_out_of_range",
+      "message": "codebinge.firestore.codec.testdata.v1.WellKnown",
+      "direction": "encode",
+      "message_file": "cases/latlng_out_of_range.message.json",
+      "expect_error": "LATLNG_OUT_OF_RANGE",
+      "note": "Latitude beyond +90. Validated here so the failure names the field, rather than surfacing later as an opaque Firestore write rejection (§3.3)."
+    },
+    {
+      "name": "composite_full",
+      "message": "codebinge.firestore.codec.testdata.v1.Composite",
+      "direction": "roundtrip",
+      "message_file": "cases/composite_full.message.json",
+      "document_file": "cases/composite_full.document.json",
+      "note": "Nested message, repeated scalar, repeated message, and both map flavours. The second element of `messages` is an empty message, which must encode as an empty mapValue rather than being dropped from the array."
+    },
+    {
+      "name": "composite_empty",
+      "message": "codebinge.firestore.codec.testdata.v1.Composite",
+      "direction": "roundtrip",
+      "message_file": "cases/composite_empty.message.json",
+      "document_file": "cases/composite_empty.document.json",
+      "note": "Empty repeated fields and empty maps are omitted, not written as [] or {} (§6). Contrast with presence_set, where an empty *message* is written."
+    },
+    {
+      "name": "options_skip_and_rename",
+      "message": "codebinge.firestore.codec.testdata.v1.Options",
+      "direction": "encode",
+      "message_file": "cases/options_skip_and_rename.message.json",
+      "document_file": "cases/options_skip_and_rename.document.json",
+      "note": "skip:true drops the field; name: overrides the stored key. Encode-only, because `dropped` cannot survive a round trip by design."
+    },
+    {
+      "name": "nesting_depth_20",
+      "message": "codebinge.firestore.codec.testdata.v1.Recursive",
+      "direction": "roundtrip",
+      "message_file": "cases/nesting_depth_20.message.json",
+      "document_file": "cases/nesting_depth_20.document.json",
+      "note": "A chain of 20 nested messages puts the innermost map at Firestore's maximum depth of 20. Must encode successfully."
+    },
+    {
+      "name": "nesting_depth_21",
+      "message": "codebinge.firestore.codec.testdata.v1.Recursive",
+      "direction": "encode",
+      "message_file": "cases/nesting_depth_21.message.json",
+      "expect_error": "NESTING_TOO_DEEP",
+      "note": "One level past the limit. The codec must reject this rather than let Firestore refuse the write (§5)."
+    },
+    {
+      "name": "schema_int_key_map",
+      "message": "codebinge.firestore.codec.testdata.v1.IntKeyMap",
+      "direction": "schema",
+      "expect_error": "UNSUPPORTED_MAP_KEY",
+      "note": "map<int32, string> must be rejected, not stringified (§5)."
+    },
+    {
+      "name": "schema_any_field",
+      "message": "codebinge.firestore.codec.testdata.v1.AnyField",
+      "direction": "schema",
+      "expect_error": "UNSUPPORTED_TYPE",
+      "note": "google.protobuf.Any is not supported (§3.4)."
+    },
+    {
+      "name": "schema_struct_field",
+      "message": "codebinge.firestore.codec.testdata.v1.StructField",
+      "direction": "schema",
+      "expect_error": "UNSUPPORTED_TYPE",
+      "note": "google.protobuf.Struct is not supported (§3.4)."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "opt_string": {
+    "stringValue": ""
+  },
+  "opt_int32": {
+    "integerValue": "0"
+  },
+  "inner": {
+    "mapValue": {
+      "fields": {}
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "zero": "0",
+  "max_signed": "9223372036854775807",
+  "min_unsigned_only": "9223372036854775808",
+  "max_unsigned": "18446744073709551615",
+  "fixed": "1",
+  "as_integer": "42",
+  "always": "0"
+}

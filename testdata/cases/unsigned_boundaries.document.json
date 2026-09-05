@@ -1,0 +1,20 @@
+{
+  "max_signed": {
+    "stringValue": "9223372036854775807"
+  },
+  "min_unsigned_only": {
+    "stringValue": "9223372036854775808"
+  },
+  "max_unsigned": {
+    "stringValue": "18446744073709551615"
+  },
+  "fixed": {
+    "stringValue": "1"
+  },
+  "as_integer": {
+    "integerValue": "42"
+  },
+  "always": {
+    "stringValue": "0"
+  }
+}
