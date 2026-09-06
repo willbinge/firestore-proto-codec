@@ -72,4 +72,88 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Everything Maven Central requires beyond the ordinary build: sources
+         and javadoc jars, GPG signatures, and the Central Portal uploader.
+         Kept in a profile so `mvn test` and CI stay fast and need no GPG key.
+
+         Release with:  mvn -Prelease deploy
+         See RELEASING.md for the one-time account, namespace and key setup. -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.4.0</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals><goal>jar-no-fork</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.12.0</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals><goal>jar</goal></goals>
+              </execution>
+            </executions>
+            <configuration>
+              <!-- The generated protobuf sources carry no javadoc, and doclint
+                   would turn "no comment" on every generated accessor into a
+                   release-blocking error. Warnings on hand-written code still
+                   show; they just do not fail the build. -->
+              <doclint>none</doclint>
+              <quiet>true</quiet>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals><goal>sign</goal></goals>
+              </execution>
+            </executions>
+            <configuration>
+              <!-- Take the passphrase from the gpg-agent rather than from a
+                   property, so it never appears in a command line or a POM. -->
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.11.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <!-- Credentials come from the <server> with this id in
+                   ~/.m2/settings.xml; never from this file. -->
+              <publishingServerId>central</publishingServerId>
+              <!-- Upload and validate, but leave the final release to a human
+                   in the Central Portal UI. Set to true once the first release
+                   has gone through cleanly. -->
+              <autoPublish>false</autoPublish>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
