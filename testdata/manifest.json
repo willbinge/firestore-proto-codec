@@ -258,6 +258,62 @@
       "expect_error": "ENUM_VALUE_UNKNOWN",
       "requires": "open_enum_values",
       "note": "An enum number with no declared name, as relayed from a newer writer, has no representation under the name encoding (\u00a74). Writing the raw integer would mix types on a String field; writing a synthetic name would decode to zero and destroy the newer writer's value. Both are silent, so the codec throws. Under enum_as: NUMBER the integer is representable and is written."
+    },
+    {
+      "name": "nesting_array_depth_20",
+      "message": "codebinge.firestore.codec.testdata.v1.Tree",
+      "direction": "roundtrip",
+      "message_file": "cases/nesting_array_depth_20.message.json",
+      "document_file": "cases/nesting_array_depth_20.document.json",
+      "note": "Nine Trees nested through `children`. Each hop costs two levels (the array, then the map), so the innermost Tree is a map at depth 19 and its `tags` array is at depth 20, the maximum. Must encode."
+    },
+    {
+      "name": "nesting_array_depth_21",
+      "message": "codebinge.firestore.codec.testdata.v1.Tree",
+      "direction": "encode",
+      "message_file": "cases/nesting_array_depth_21.message.json",
+      "expect_error": "NESTING_TOO_DEEP",
+      "note": "Ten Trees nested through `children` put the innermost map at depth 21. A codec that does not count the array as a level sees depth 11 and lets Firestore reject the write instead (\u00a75)."
+    },
+    {
+      "name": "nesting_map_depth_20",
+      "message": "codebinge.firestore.codec.testdata.v1.Tree",
+      "direction": "roundtrip",
+      "message_file": "cases/nesting_map_depth_20.message.json",
+      "document_file": "cases/nesting_map_depth_20.document.json",
+      "note": "The same shape through a map field: the `named` map is a level, and each Tree value sits inside it. Innermost map at 19, its `tags` array at 20."
+    },
+    {
+      "name": "nesting_map_depth_21",
+      "message": "codebinge.firestore.codec.testdata.v1.Tree",
+      "direction": "encode",
+      "message_file": "cases/nesting_map_depth_21.message.json",
+      "expect_error": "NESTING_TOO_DEEP",
+      "note": "Ten Trees nested through `named` put the innermost map at depth 21."
+    },
+    {
+      "name": "map_int_key_encode",
+      "message": "codebinge.firestore.codec.testdata.v1.IntKeyMap",
+      "direction": "encode",
+      "message_file": "cases/map_int_key_encode.message.json",
+      "expect_error": "UNSUPPORTED_MAP_KEY",
+      "note": "A non-string map key is rejected at encode time, not only by schema validation, which a caller may never run. Without the check protobuf-es silently stringifies the key, which is exactly the behaviour \u00a75 forbids."
+    },
+    {
+      "name": "map_int_key_decode",
+      "message": "codebinge.firestore.codec.testdata.v1.IntKeyMap",
+      "direction": "decode",
+      "document_file": "cases/map_int_key_decode.document.json",
+      "expect_error": "UNSUPPORTED_MAP_KEY",
+      "note": "The same rejection when decoding, so a document that was written by a non-conforming encoder is refused rather than parsed into keys of the wrong type."
+    },
+    {
+      "name": "float_rounding",
+      "message": "codebinge.firestore.codec.testdata.v1.Scalars",
+      "direction": "roundtrip",
+      "message_file": "cases/float_rounding.message.json",
+      "document_file": "cases/float_rounding.document.json",
+      "note": "A float encodes as its binary32 value: 0.1 is stored as 0.10000000149011612 (\u00a72). Java rounds by construction; Dart and protobuf-es hold a float in a double without rounding, so an implementation that passes the value through writes 0.1 from an in-memory message and 0.10000000149011612 from the same message after a wire trip. Equality queries would then disagree by writer."
     }
   ],
   "requirements": {

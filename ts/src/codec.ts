@@ -102,13 +102,7 @@ export class FirestoreProtoCodec {
     depth: number,
     path: string,
   ): FirestoreDocument {
-    if (depth > MAX_NESTING_DEPTH) {
-      throw new CodecError(
-        "NESTING_TOO_DEEP",
-        `nesting exceeds Firestore's limit of ${MAX_NESTING_DEPTH} levels`,
-        path,
-      );
-    }
+    checkDepth(depth, path);
     const out: FirestoreDocument = {};
     for (const field of schema.fields) {
       const rules = rulesFor(field);
@@ -118,8 +112,11 @@ export class FirestoreProtoCodec {
       const value = readField(message, field);
 
       if (field.fieldKind === "map") {
+        requireStringKeys(field, fieldPath);
         const entries = Object.entries((value ?? {}) as Record<string, unknown>);
         if (entries.length === 0) continue;
+        // The map is a level of its own, and each value sits inside it.
+        checkDepth(depth + 1, fieldPath);
         out[name] = Object.fromEntries(
           entries.map(([k, v]) => [
             k,
@@ -129,7 +126,7 @@ export class FirestoreProtoCodec {
               field.message,
               v,
               DEFAULT_RULES,
-              depth,
+              depth + 1,
               `${fieldPath}.${k}`,
             ),
           ]),
@@ -137,6 +134,8 @@ export class FirestoreProtoCodec {
       } else if (field.fieldKind === "list") {
         const items = (value ?? []) as unknown[];
         if (items.length === 0) continue;
+        // The array is a level of its own, and each element sits inside it.
+        checkDepth(depth + 1, fieldPath);
         out[name] = items.map((item, i) =>
           this.encodeElement(
             field.scalar,
@@ -144,7 +143,7 @@ export class FirestoreProtoCodec {
             field.message,
             item,
             rules,
-            depth,
+            depth + 1,
             `${fieldPath}[${i}]`,
           ),
         );
@@ -212,13 +211,17 @@ export class FirestoreProtoCodec {
       case ScalarType.STRING:
       case ScalarType.BOOL:
       case ScalarType.DOUBLE:
-      case ScalarType.FLOAT:
       case ScalarType.INT32:
       case ScalarType.SINT32:
       case ScalarType.SFIXED32:
       case ScalarType.UINT32:
       case ScalarType.FIXED32:
         return value;
+      case ScalarType.FLOAT:
+        // protobuf-es holds a float in a number without rounding, so the same
+        // value would encode differently before and after a wire trip, and
+        // differently from Java. Round to binary32 so every path agrees.
+        return Math.fround(value as number);
       case ScalarType.BYTES:
         return this.types.blob(value as Uint8Array);
       case ScalarType.INT64:
@@ -295,10 +298,11 @@ export class FirestoreProtoCodec {
       const rules = rulesFor(field);
       if (rules.skip) continue;
       const name = storedName(field, rules);
+      const fieldPath = path === "" ? name : `${path}.${name}`;
+      if (field.fieldKind === "map") requireStringKeys(field, fieldPath);
       if (!(name in document)) continue;
       const raw = document[name];
       if (raw === undefined || raw === null) continue;
-      const fieldPath = path === "" ? name : `${path}.${name}`;
 
       if (field.fieldKind === "map") {
         message[field.localName] = Object.fromEntries(
@@ -377,8 +381,9 @@ export class FirestoreProtoCodec {
       case ScalarType.BOOL:
         return raw;
       case ScalarType.DOUBLE:
-      case ScalarType.FLOAT:
         return Number(raw);
+      case ScalarType.FLOAT:
+        return Math.fround(Number(raw));
       case ScalarType.INT32:
       case ScalarType.SINT32:
       case ScalarType.SFIXED32:
@@ -464,13 +469,7 @@ export class FirestoreProtoCodec {
       const rules = rulesFor(field);
       if (rules.skip) continue;
       const fieldPath = `${path}.${field.name}`;
-      if (field.fieldKind === "map" && field.mapKey !== ScalarType.STRING) {
-        throw new CodecError(
-          "UNSUPPORTED_MAP_KEY",
-          "map keys must be strings; Firestore has no other key type",
-          fieldPath,
-        );
-      }
+      if (field.fieldKind === "map") requireStringKeys(field, fieldPath);
       if (field.message !== undefined) {
         this.validateSub(field.message, seen, fieldPath);
       }
@@ -497,6 +496,32 @@ export class FirestoreProtoCodec {
       return;
     }
     this.validate(schema, seen, path);
+  }
+}
+
+/** Every map and array is a level; the document itself is level 1. */
+function checkDepth(depth: number, path: string): void {
+  if (depth > MAX_NESTING_DEPTH) {
+    throw new CodecError(
+      "NESTING_TOO_DEEP",
+      `nesting exceeds Firestore's limit of ${MAX_NESTING_DEPTH} levels`,
+      path,
+    );
+  }
+}
+
+/** Checked on every encode and decode, not only in validateSchema, so a
+ * caller who skips validation still cannot write stringified keys. */
+function requireStringKeys(
+  field: Extract<DescField, { fieldKind: "map" }>,
+  path: string,
+): void {
+  if (field.mapKey !== ScalarType.STRING) {
+    throw new CodecError(
+      "UNSUPPORTED_MAP_KEY",
+      "map keys must be strings; Firestore has no other key type",
+      path,
+    );
   }
 }
 

@@ -235,9 +235,9 @@ private static final long serialVersionUID = 0L;
   private float floatField_ = 0F;
   /**
    * <pre>
-   * Exactly representable in binary32, so widening to double introduces no
-   * noise. A value like 0.1 would encode as 0.10000000149011612 and make the
-   * vector a test of float precision rather than of this codec.
+   * scalars_full uses 1.5, exactly representable in binary32, so that vector
+   * tests the type mapping alone. float_rounding uses 0.1 to pin the rule that
+   * a float encodes as its binary32 value, 0.10000000149011612 (§2).
    * </pre>
    *
    * <code>float float_field = 15;</code>
@@ -1369,9 +1369,9 @@ private static final long serialVersionUID = 0L;
     private float floatField_ ;
     /**
      * <pre>
-     * Exactly representable in binary32, so widening to double introduces no
-     * noise. A value like 0.1 would encode as 0.10000000149011612 and make the
-     * vector a test of float precision rather than of this codec.
+     * scalars_full uses 1.5, exactly representable in binary32, so that vector
+     * tests the type mapping alone. float_rounding uses 0.1 to pin the rule that
+     * a float encodes as its binary32 value, 0.10000000149011612 (§2).
      * </pre>
      *
      * <code>float float_field = 15;</code>
@@ -1383,9 +1383,9 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Exactly representable in binary32, so widening to double introduces no
-     * noise. A value like 0.1 would encode as 0.10000000149011612 and make the
-     * vector a test of float precision rather than of this codec.
+     * scalars_full uses 1.5, exactly representable in binary32, so that vector
+     * tests the type mapping alone. float_rounding uses 0.1 to pin the rule that
+     * a float encodes as its binary32 value, 0.10000000149011612 (§2).
      * </pre>
      *
      * <code>float float_field = 15;</code>
@@ -1401,9 +1401,9 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Exactly representable in binary32, so widening to double introduces no
-     * noise. A value like 0.1 would encode as 0.10000000149011612 and make the
-     * vector a test of float precision rather than of this codec.
+     * scalars_full uses 1.5, exactly representable in binary32, so that vector
+     * tests the type mapping alone. float_rounding uses 0.1 to pin the rule that
+     * a float encodes as its binary32 value, 0.10000000149011612 (§2).
      * </pre>
      *
      * <code>float float_field = 15;</code>

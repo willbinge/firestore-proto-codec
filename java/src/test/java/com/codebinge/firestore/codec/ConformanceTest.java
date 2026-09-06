@@ -20,6 +20,7 @@ import com.codebinge.firestore.codec.testdata.v1.Recursive;
 import com.codebinge.firestore.codec.testdata.v1.Scalars;
 import com.codebinge.firestore.codec.testdata.v1.StringifiedInt64;
 import com.codebinge.firestore.codec.testdata.v1.StructField;
+import com.codebinge.firestore.codec.testdata.v1.Tree;
 import com.codebinge.firestore.codec.testdata.v1.Unsigned;
 import com.codebinge.firestore.codec.testdata.v1.WellKnown;
 import com.google.gson.JsonArray;
@@ -58,6 +59,7 @@ class ConformanceTest {
           Composite.getDefaultInstance(),
           com.codebinge.firestore.codec.testdata.v1.Options.getDefaultInstance(),
           Recursive.getDefaultInstance(),
+          Tree.getDefaultInstance(),
           Choice.getDefaultInstance(),
           StringifiedInt64.getDefaultInstance(),
           IntKeyMap.getDefaultInstance(),

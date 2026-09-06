@@ -1,7 +1,7 @@
 # @codebinge/firestore-proto-codec
 
 TypeScript implementation of the [encoding spec](../docs/encoding.md). Passes all
-30 [conformance vectors](../testdata/).
+37 [conformance vectors](../testdata/).
 
 ```ts
 const codec = new FirestoreProtoCodec();

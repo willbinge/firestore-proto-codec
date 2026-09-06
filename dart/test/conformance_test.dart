@@ -26,6 +26,7 @@ final _factories = <String, GeneratedMessage Function()>{
   '${_pkg}Composite': td.Composite.new,
   '${_pkg}Options': td.Options.new,
   '${_pkg}Recursive': td.Recursive.new,
+  '${_pkg}Tree': td.Tree.new,
   '${_pkg}Choice': td.Choice.new,
   '${_pkg}StringifiedInt64': td.StringifiedInt64.new,
   '${_pkg}IntKeyMap': inv.IntKeyMap.new,

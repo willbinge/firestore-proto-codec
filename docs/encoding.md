@@ -84,6 +84,15 @@ readable by another. Coerce numerically rather than type-checking the incoming
 value. The reverse does not arise -- an integer field is only ever written as an
 Integer.
 
+**A `float` encodes as its binary32 value.** Firestore has only doubles, so a
+`float` field is widened, and the widened value must be the one the wire format
+would carry: `0.1` is stored as `0.10000000149011612`. Java does this by
+construction. Dart and protobuf-es hold a `float` in a double without rounding,
+so an implementation that passes the value through writes `0.1` from a message
+built in memory and `0.10000000149011612` from the same message after a wire
+trip, and equality queries then disagree by writer. Round to binary32 on encode
+and on decode. The `float_rounding` vector pins it.
+
 ### 2.1 Unsigned 64-bit
 
 `uint64` and `fixed64` range up to 2^64−1; Firestore's integer is a **signed**
@@ -254,12 +263,20 @@ Per-field escape hatch: `enum_as: NUMBER`.
 
 Non-string map keys are rejected rather than stringified: proto3 JSON stringifies
 them, which round-trips ambiguously (`1` vs `"1"`), and Firestore map keys must be
-strings regardless. Refuse rather than silently rename.
+strings regardless. Refuse rather than silently rename. The check runs on every
+encode and decode as well as in schema validation, since a caller may never run
+the latter; a field marked `skip` is exempt, which is the escape hatch for a
+schema that carries such a map for other consumers.
 
 **Nesting depth is capped at 20** by Firestore, counting maps and arrays together.
-A recursive message type is only encodable if the caller keeps it under that
-bound; the codec should detect overflow and throw rather than let Firestore
-reject the write.
+The document itself is level 1, and every map or array below it adds one. A
+singular message field is therefore one level below its parent, but a message
+reached through a `repeated` field or a `map` field is **two** levels below:
+the array or map is a level of its own, and the element map sits inside it. A
+`repeated` scalar costs one level for the array. A recursive message type is only
+encodable if the caller keeps it under that bound; the codec detects overflow and
+throws rather than let Firestore reject the write. The `nesting_*` vectors pin
+both the singular chain and the array and map shapes.
 
 ## 6. Presence and defaults
 
@@ -491,7 +508,8 @@ cannot construct the input and may skip the case; it is conformant by
 construction. Today the only requirement is `open_enum_values`, which Dart's
 closed enums do not meet.
 
-Coverage: every scalar type; NaN and both infinities; both enum encodings, an
+Coverage: every scalar type; a `float` needing binary32 rounding; NaN and both
+infinities; both enum encodings, an
 unknown enum name, and an unknown enum number; all-defaults; explicit presence
 set and unset, including a oneof member at its default and a message-typed
 oneof member; a negative `Duration`; `int64` under `jstype = JS_STRING` at
@@ -499,8 +517,9 @@ oneof member; a negative `Duration`; `int64` under `jstype = JS_STRING` at
 round-trips at `0`, `2^63−1`, `2^63`, and `2^64−1` plus four decode rejections
 and an encode rejection; a `Timestamp` with sub-microsecond nanos; `Duration`;
 `LatLng` and an out-of-range rejection; nested, repeated, and map fields; the
-`skip` and `name` options; nesting at depth 20 and 21; and three schemas that
-must be rejected outright.
+`skip` and `name` options; nesting at depth 20 and 21 through singular fields,
+through arrays, and through maps; a non-string map key rejected on encode and on
+decode; and three schemas that must be rejected outright.
 
 The four unsigned boundary values are the ones to understand first — an
 implementation that handles `0` and `2^64−1` but gets `2^63` wrong is the

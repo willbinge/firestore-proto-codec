@@ -1,6 +1,6 @@
 # firestore_proto_codec (Dart)
 
-Dart implementation of the [encoding spec](../docs/encoding.md). Passes all 30
+Dart implementation of the [encoding spec](../docs/encoding.md). Passes all 37
 [conformance vectors](../testdata/) (one is skipped: Dart's closed enums cannot
 construct the input for `enum_unknown_number`, so it is conformant by
 construction).
@@ -84,6 +84,10 @@ Messages using neither need no registration.
 - **`-Dprotobuf.omit_field_names=true` breaks the encoding**, which is defined
   in terms of proto field names. The codec throws a `StateError` naming the
   field rather than writing a document with empty keys.
+- **`-Dprotobuf.omit_message_names=true` breaks it too.** The codec recognizes
+  `Timestamp`, `Duration`, and `LatLng` by type name and keys registered
+  options by it, so stripped names would silently encode all three as plain
+  maps. The codec throws a `StateError` instead.
 - `DocumentReference` is not modelled at all
   ([§7](../docs/encoding.md#7-options)) — store document paths in plain `string`
   fields.

@@ -1,0 +1,119 @@
+{
+  "named": {
+    "mapValue": {
+      "fields": {
+        "k": {
+          "mapValue": {
+            "fields": {
+              "named": {
+                "mapValue": {
+                  "fields": {
+                    "k": {
+                      "mapValue": {
+                        "fields": {
+                          "named": {
+                            "mapValue": {
+                              "fields": {
+                                "k": {
+                                  "mapValue": {
+                                    "fields": {
+                                      "named": {
+                                        "mapValue": {
+                                          "fields": {
+                                            "k": {
+                                              "mapValue": {
+                                                "fields": {
+                                                  "named": {
+                                                    "mapValue": {
+                                                      "fields": {
+                                                        "k": {
+                                                          "mapValue": {
+                                                            "fields": {
+                                                              "named": {
+                                                                "mapValue": {
+                                                                  "fields": {
+                                                                    "k": {
+                                                                      "mapValue": {
+                                                                        "fields": {
+                                                                          "named": {
+                                                                            "mapValue": {
+                                                                              "fields": {
+                                                                                "k": {
+                                                                                  "mapValue": {
+                                                                                    "fields": {
+                                                                                      "named": {
+                                                                                        "mapValue": {
+                                                                                          "fields": {
+                                                                                            "k": {
+                                                                                              "mapValue": {
+                                                                                                "fields": {
+                                                                                                  "named": {
+                                                                                                    "mapValue": {
+                                                                                                      "fields": {
+                                                                                                        "k": {
+                                                                                                          "mapValue": {
+                                                                                                            "fields": {
+                                                                                                              "tags": {
+                                                                                                                "arrayValue": {
+                                                                                                                  "values": [
+                                                                                                                    {
+                                                                                                                      "stringValue": "t"
+                                                                                                                    }
+                                                                                                                  ]
+                                                                                                                }
+                                                                                                              }
+                                                                                                            }
+                                                                                                          }
+                                                                                                        }
+                                                                                                      }
+                                                                                                    }
+                                                                                                  }
+                                                                                                }
+                                                                                              }
+                                                                                            }
+                                                                                          }
+                                                                                        }
+                                                                                      }
+                                                                                    }
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -397,3 +397,55 @@ const Recursive$json = {
 final $typed_data.Uint8List recursiveDescriptor = $convert.base64Decode(
     'CglSZWN1cnNpdmUSFAoFbGFiZWwYASABKAlSBWxhYmVsEkYKBWNoaWxkGAIgASgLMjAuY29kZW'
     'JpbmdlLmZpcmVzdG9yZS5jb2RlYy50ZXN0ZGF0YS52MS5SZWN1cnNpdmVSBWNoaWxk');
+
+@$core.Deprecated('Use treeDescriptor instead')
+const Tree$json = {
+  '1': 'Tree',
+  '2': [
+    {'1': 'label', '3': 1, '4': 1, '5': 9, '10': 'label'},
+    {
+      '1': 'children',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.codebinge.firestore.codec.testdata.v1.Tree',
+      '10': 'children'
+    },
+    {
+      '1': 'named',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.codebinge.firestore.codec.testdata.v1.Tree.NamedEntry',
+      '10': 'named'
+    },
+    {'1': 'tags', '3': 4, '4': 3, '5': 9, '10': 'tags'},
+  ],
+  '3': [Tree_NamedEntry$json],
+};
+
+@$core.Deprecated('Use treeDescriptor instead')
+const Tree_NamedEntry$json = {
+  '1': 'NamedEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.codebinge.firestore.codec.testdata.v1.Tree',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
+};
+
+/// Descriptor for `Tree`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List treeDescriptor = $convert.base64Decode(
+    'CgRUcmVlEhQKBWxhYmVsGAEgASgJUgVsYWJlbBJHCghjaGlsZHJlbhgCIAMoCzIrLmNvZGViaW'
+    '5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuVHJlZVIIY2hpbGRyZW4STAoFbmFtZWQY'
+    'AyADKAsyNi5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxLlRyZWUuTmFtZW'
+    'RFbnRyeVIFbmFtZWQSEgoEdGFncxgEIAMoCVIEdGFncxplCgpOYW1lZEVudHJ5EhAKA2tleRgB'
+    'IAEoCVIDa2V5EkEKBXZhbHVlGAIgASgLMisuY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy50ZX'
+    'N0ZGF0YS52MS5UcmVlUgV2YWx1ZToCOAE=');

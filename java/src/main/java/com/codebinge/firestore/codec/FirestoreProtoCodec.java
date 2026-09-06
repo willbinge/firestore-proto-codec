@@ -116,12 +116,7 @@ public final class FirestoreProtoCodec {
   // ------------------------------------------------------------------ encoding
 
   private Map<String, Object> encodeMessage(Message message, int depth, String path) {
-    if (depth > MAX_NESTING_DEPTH) {
-      throw new CodecError(
-          CodecErrorCode.NESTING_TOO_DEEP,
-          "nesting exceeds Firestore's limit of " + MAX_NESTING_DEPTH + " levels",
-          path);
-    }
+    checkDepth(depth, path);
     Map<String, Object> out = new LinkedHashMap<>();
     for (FieldDescriptor fd : message.getDescriptorForType().getFields()) {
       FieldRules rules = rulesFor(fd);
@@ -132,10 +127,13 @@ public final class FirestoreProtoCodec {
       String fieldPath = path.isEmpty() ? name : path + "." + name;
 
       if (fd.isMapField()) {
+        requireStringKeys(fd, fieldPath);
         List<?> entries = (List<?>) message.getField(fd);
         if (entries.isEmpty()) {
           continue;
         }
+        // The map is a level of its own, and each value sits inside it.
+        checkDepth(depth + 1, fieldPath);
         FieldDescriptor keyField = fd.getMessageType().findFieldByName("key");
         FieldDescriptor valueField = fd.getMessageType().findFieldByName("value");
         Map<String, Object> encoded = new LinkedHashMap<>();
@@ -148,7 +146,7 @@ public final class FirestoreProtoCodec {
                   valueField,
                   entry.getField(valueField),
                   DEFAULT_RULES,
-                  depth,
+                  depth + 1,
                   fieldPath + "." + key));
         }
         out.put(name, encoded);
@@ -157,9 +155,12 @@ public final class FirestoreProtoCodec {
         if (items.isEmpty()) {
           continue;
         }
+        // The array is a level of its own, and each element sits inside it.
+        checkDepth(depth + 1, fieldPath);
         List<Object> encoded = new ArrayList<>(items.size());
         for (int i = 0; i < items.size(); i++) {
-          encoded.add(encodeValue(fd, items.get(i), rules, depth, fieldPath + "[" + i + "]"));
+          encoded.add(
+              encodeValue(fd, items.get(i), rules, depth + 1, fieldPath + "[" + i + "]"));
         }
         out.put(name, encoded);
       } else if (fd.hasPresence()) {
@@ -290,6 +291,10 @@ public final class FirestoreProtoCodec {
         continue;
       }
       String name = storedName(fd, rules);
+      String fieldPath = path.isEmpty() ? name : path + "." + name;
+      if (fd.isMapField()) {
+        requireStringKeys(fd, fieldPath);
+      }
       if (!document.containsKey(name)) {
         continue;
       }
@@ -297,7 +302,6 @@ public final class FirestoreProtoCodec {
       if (raw == null) {
         continue;
       }
-      String fieldPath = path.isEmpty() ? name : path + "." + name;
 
       if (fd.isMapField()) {
         FieldDescriptor keyField = fd.getMessageType().findFieldByName("key");
@@ -470,13 +474,7 @@ public final class FirestoreProtoCodec {
       }
       String fieldPath = path + "." + fd.getName();
       if (fd.isMapField()) {
-        FieldDescriptor keyField = fd.getMessageType().findFieldByName("key");
-        if (keyField.getType() != FieldDescriptor.Type.STRING) {
-          throw new CodecError(
-              CodecErrorCode.UNSUPPORTED_MAP_KEY,
-              "map keys must be strings; Firestore has no other key type",
-              fieldPath);
-        }
+        requireStringKeys(fd, fieldPath);
         FieldDescriptor valueField = fd.getMessageType().findFieldByName("value");
         if (valueField.getJavaType() == FieldDescriptor.JavaType.MESSAGE) {
           validateSub(valueField.getMessageType(), seen, fieldPath);
@@ -500,6 +498,30 @@ public final class FirestoreProtoCodec {
   }
 
   // --------------------------------------------------------------------- utils
+
+  /** Every map and array is a level; the document itself is level 1. */
+  private static void checkDepth(int depth, String path) {
+    if (depth > MAX_NESTING_DEPTH) {
+      throw new CodecError(
+          CodecErrorCode.NESTING_TOO_DEEP,
+          "nesting exceeds Firestore's limit of " + MAX_NESTING_DEPTH + " levels",
+          path);
+    }
+  }
+
+  /**
+   * Checked on every encode and decode, not only in {@link #validateSchema}, so
+   * a caller who skips validation still cannot write stringified keys.
+   */
+  private static void requireStringKeys(FieldDescriptor fd, String path) {
+    FieldDescriptor keyField = fd.getMessageType().findFieldByName("key");
+    if (keyField.getType() != FieldDescriptor.Type.STRING) {
+      throw new CodecError(
+          CodecErrorCode.UNSUPPORTED_MAP_KEY,
+          "map keys must be strings; Firestore has no other key type",
+          path);
+    }
+  }
 
   /**
    * Floating-point defaults are compared numerically rather than through

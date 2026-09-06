@@ -1,0 +1,11 @@
+{
+  "bad": {
+    "mapValue": {
+      "fields": {
+        "1": {
+          "stringValue": "x"
+        }
+      }
+    }
+  }
+}

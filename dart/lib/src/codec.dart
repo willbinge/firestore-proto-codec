@@ -51,40 +51,40 @@ class FirestoreProtoCodec {
   /// Throws if [prototype]'s type, or any type it reaches, cannot be encoded.
   /// Call once at startup rather than discovering it on the first write.
   void validateSchema(GeneratedMessage prototype) =>
-      _validate(prototype, <String>{}, prototype.info_.qualifiedMessageName);
+      _validate(prototype, <String>{}, _qualifiedName(prototype.info_));
 
   // --------------------------------------------------------------- encoding
 
   Map<String, Object?> _encodeMessage(
       GeneratedMessage m, int depth, String path) {
-    if (depth > maxNestingDepth) {
-      throw CodecError(
-        CodecErrorCode.nestingTooDeep,
-        'nesting exceeds Firestore\'s limit of $maxNestingDepth levels',
-        path: path,
-      );
-    }
+    _checkDepth(depth, path);
     final info = m.info_;
+    final typeName = _qualifiedName(info);
     final out = <String, Object?>{};
     for (final fi in info.byIndex) {
-      final rules = registry.rulesFor(info.qualifiedMessageName, fi.tagNumber);
+      final rules = registry.rulesFor(typeName, fi.tagNumber);
       if (rules.skip) continue;
       final name = _storedName(info, fi, rules);
       final fieldPath = path.isEmpty ? name : '$path.$name';
       final value = m.getField(fi.tagNumber);
 
       if (fi is MapFieldInfo) {
+        _requireStringKeys(fi, fieldPath);
         final map = value as Map<Object?, Object?>;
         if (map.isEmpty) continue;
-        out[name] = _encodeMap(fi, map, depth, fieldPath);
+        // The map is a level of its own, and each value sits inside it.
+        _checkDepth(depth + 1, fieldPath);
+        out[name] = _encodeMap(fi, map, depth + 1, fieldPath);
       } else if (fi.isRepeated) {
         final list = value as List<Object?>;
         if (list.isEmpty) continue;
+        // The array is a level of its own, and each element sits inside it.
+        _checkDepth(depth + 1, fieldPath);
         final base = _baseType(fi.type);
         out[name] = <Object?>[
           for (var i = 0; i < list.length; i++)
-            _encodeSingle(
-                base, list[i]!, rules, fi.subBuilder, depth, '$fieldPath[$i]'),
+            _encodeSingle(base, list[i]!, rules, fi.subBuilder, depth + 1,
+                '$fieldPath[$i]'),
         ];
       } else if (_hasPresence(info, fi)) {
         if (!m.hasField(fi.tagNumber)) continue;
@@ -117,8 +117,12 @@ class FirestoreProtoCodec {
     if (_is(base, PbFieldType.BYTES_BIT)) {
       return types.blob(Uint8List.fromList(value as List<int>));
     }
-    if (_is(base, PbFieldType.DOUBLE_BIT) || _is(base, PbFieldType.FLOAT_BIT)) {
-      return value as double;
+    if (_is(base, PbFieldType.DOUBLE_BIT)) return value as double;
+    if (_is(base, PbFieldType.FLOAT_BIT)) {
+      // The runtime holds a float in a double without rounding, so the same
+      // value would encode differently before and after a wire trip, and
+      // differently from Java. Round to binary32 so every path agrees.
+      return _toFloat32(value as double);
     }
     if (_is(base, PbFieldType.ENUM_BIT)) {
       final e = value as ProtobufEnum;
@@ -162,7 +166,7 @@ class FirestoreProtoCodec {
 
   Object _encodeMessageValue(
       GeneratedMessage sub, FieldRules rules, int depth, String path) {
-    final qualified = sub.info_.qualifiedMessageName;
+    final qualified = _qualifiedName(sub.info_);
     if (_unsupportedTypes.contains(qualified)) {
       throw CodecError(CodecErrorCode.unsupportedType,
           '$qualified has no Firestore representation', path: path);
@@ -213,14 +217,16 @@ class FirestoreProtoCodec {
   void _decodeInto(
       GeneratedMessage m, Map<String, Object?> document, String path) {
     final info = m.info_;
+    final typeName = _qualifiedName(info);
     for (final fi in info.byIndex) {
-      final rules = registry.rulesFor(info.qualifiedMessageName, fi.tagNumber);
+      final rules = registry.rulesFor(typeName, fi.tagNumber);
       if (rules.skip) continue;
       final name = _storedName(info, fi, rules);
+      final fieldPath = path.isEmpty ? name : '$path.$name';
+      if (fi is MapFieldInfo) _requireStringKeys(fi, fieldPath);
       if (!document.containsKey(name)) continue;
       final raw = document[name];
       if (raw == null) continue;
-      final fieldPath = path.isEmpty ? name : '$path.$name';
 
       if (fi is MapFieldInfo) {
         final valueInfo = fi.mapEntryBuilderInfo.fieldInfo[2];
@@ -259,8 +265,9 @@ class FirestoreProtoCodec {
       }
       return bytes;
     }
-    if (_is(base, PbFieldType.DOUBLE_BIT) || _is(base, PbFieldType.FLOAT_BIT)) {
-      return (raw as num).toDouble();
+    if (_is(base, PbFieldType.DOUBLE_BIT)) return (raw as num).toDouble();
+    if (_is(base, PbFieldType.FLOAT_BIT)) {
+      return _toFloat32((raw as num).toDouble());
     }
     if (_is(base, PbFieldType.ENUM_BIT)) return _decodeEnum(raw, fi, path);
     if (_is(base, PbFieldType.INT32_BIT) ||
@@ -336,7 +343,7 @@ class FirestoreProtoCodec {
           'message field has no builder', path: path);
     }
     final sub = create();
-    final qualified = sub.info_.qualifiedMessageName;
+    final qualified = _qualifiedName(sub.info_);
     if (_unsupportedTypes.contains(qualified)) {
       throw CodecError(CodecErrorCode.unsupportedType,
           '$qualified has no Firestore representation', path: path);
@@ -382,19 +389,14 @@ class FirestoreProtoCodec {
 
   void _validate(GeneratedMessage m, Set<String> seen, String path) {
     final info = m.info_;
-    if (!seen.add(info.qualifiedMessageName)) return;
+    final typeName = _qualifiedName(info);
+    if (!seen.add(typeName)) return;
     for (final fi in info.byIndex) {
-      final rules = registry.rulesFor(info.qualifiedMessageName, fi.tagNumber);
+      final rules = registry.rulesFor(typeName, fi.tagNumber);
       if (rules.skip) continue;
       final fieldPath = '$path.${fi.protoName}';
       if (fi is MapFieldInfo) {
-        if (!_is(_baseType(fi.keyFieldType), PbFieldType.STRING_BIT)) {
-          throw CodecError(
-            CodecErrorCode.unsupportedMapKey,
-            'map keys must be strings; Firestore has no other key type',
-            path: fieldPath,
-          );
-        }
+        _requireStringKeys(fi, fieldPath);
         final valueInfo = fi.mapEntryBuilderInfo.fieldInfo[2];
         _validateSub(valueInfo?.subBuilder, seen, fieldPath);
       } else if (fi.isGroupOrMessage) {
@@ -406,7 +408,7 @@ class FirestoreProtoCodec {
   void _validateSub(CreateBuilderFunc? create, Set<String> seen, String path) {
     if (create == null) return;
     final sub = create();
-    final qualified = sub.info_.qualifiedMessageName;
+    final qualified = _qualifiedName(sub.info_);
     if (_unsupportedTypes.contains(qualified)) {
       throw CodecError(CodecErrorCode.unsupportedType,
           '$qualified has no Firestore representation', path: path);
@@ -420,6 +422,44 @@ class FirestoreProtoCodec {
   }
 
   // ------------------------------------------------------------------ utils
+
+  /// Every map and array is a level; the document itself is level 1.
+  void _checkDepth(int depth, String path) {
+    if (depth > maxNestingDepth) {
+      throw CodecError(
+        CodecErrorCode.nestingTooDeep,
+        'nesting exceeds Firestore\'s limit of $maxNestingDepth levels',
+        path: path,
+      );
+    }
+  }
+
+  /// Checked on every encode and decode, not only in [validateSchema], so a
+  /// caller who skips validation still cannot write stringified keys.
+  void _requireStringKeys(MapFieldInfo<dynamic, dynamic> fi, String path) {
+    if (!_is(_baseType(fi.keyFieldType), PbFieldType.STRING_BIT)) {
+      throw CodecError(
+        CodecErrorCode.unsupportedMapKey,
+        'map keys must be strings; Firestore has no other key type',
+        path: path,
+      );
+    }
+  }
+
+  /// The codec recognizes Timestamp, Duration, and LatLng by type name and
+  /// keys registered options by it, so a build that strips names would
+  /// silently encode all three as plain maps.
+  String _qualifiedName(BuilderInfo info) {
+    final name = info.qualifiedMessageName;
+    if (name.isEmpty) {
+      throw StateError(
+        'message has no name. This build was compiled with '
+        '-Dprotobuf.omit_message_names=true, which strips the type names this '
+        'codec uses to recognize well-known types and look up options.',
+      );
+    }
+    return name;
+  }
 
   String _storedName(BuilderInfo info, FieldInfo<dynamic> fi, FieldRules rules) {
     final name = rules.name ?? fi.protoName;
@@ -458,3 +498,11 @@ int _baseType(int type) =>
         PbFieldType.REQUIRED_BIT);
 
 bool _is(int type, int bit) => (type & bit) != 0;
+
+final _float32 = Float32List(1);
+
+/// Rounds to the nearest binary32 value, as the wire format would.
+double _toFloat32(double value) {
+  _float32[0] = value;
+  return _float32[0];
+}

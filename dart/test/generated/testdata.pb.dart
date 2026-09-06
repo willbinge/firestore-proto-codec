@@ -252,9 +252,9 @@ class Scalars extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   void clearDoubleField() => $_clearField(14);
 
-  /// Exactly representable in binary32, so widening to double introduces no
-  /// noise. A value like 0.1 would encode as 0.10000000149011612 and make the
-  /// vector a test of float precision rather than of this codec.
+  /// scalars_full uses 1.5, exactly representable in binary32, so that vector
+  /// tests the type mapping alone. float_rounding uses 0.1 to pin the rule that
+  /// a float encodes as its binary32 value, 0.10000000149011612 (§2).
   @$pb.TagNumber(15)
   $core.double get floatField => $_getN(14);
   @$pb.TagNumber(15)
@@ -1180,6 +1180,88 @@ class Recursive extends $pb.GeneratedMessage {
   void clearChild() => $_clearField(2);
   @$pb.TagNumber(2)
   Recursive ensureChild() => $_ensure(1);
+}
+
+/// Nesting depth through arrays and maps (§5). Every map and array is a level,
+/// so a Tree reached through `children` or `named` sits two levels below its
+/// parent, not one, and `tags` is a level of its own.
+class Tree extends $pb.GeneratedMessage {
+  factory Tree({
+    $core.String? label,
+    $core.Iterable<Tree>? children,
+    $core.Iterable<$core.MapEntry<$core.String, Tree>>? named,
+    $core.Iterable<$core.String>? tags,
+  }) {
+    final result = create();
+    if (label != null) result.label = label;
+    if (children != null) result.children.addAll(children);
+    if (named != null) result.named.addEntries(named);
+    if (tags != null) result.tags.addAll(tags);
+    return result;
+  }
+
+  Tree._();
+
+  factory Tree.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Tree.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Tree',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'codebinge.firestore.codec.testdata.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'label')
+    ..pPM<Tree>(2, _omitFieldNames ? '' : 'children', subBuilder: Tree.create)
+    ..m<$core.String, Tree>(3, _omitFieldNames ? '' : 'named',
+        entryClassName: 'Tree.NamedEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: Tree.create,
+        valueDefaultOrMaker: Tree.getDefault,
+        packageName:
+            const $pb.PackageName('codebinge.firestore.codec.testdata.v1'))
+    ..pPS(4, _omitFieldNames ? '' : 'tags')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Tree clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Tree copyWith(void Function(Tree) updates) =>
+      super.copyWith((message) => updates(message as Tree)) as Tree;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Tree create() => Tree._();
+  @$core.override
+  Tree createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Tree getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Tree>(create);
+  static Tree? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get label => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set label($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLabel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLabel() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<Tree> get children => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $pb.PbMap<$core.String, Tree> get named => $_getMap(2);
+
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.String> get tags => $_getList(3);
 }
 
 const $core.bool _omitFieldNames =

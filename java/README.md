@@ -1,6 +1,6 @@
 # firestore-proto-codec (Java)
 
-Java implementation of the [encoding spec](../docs/encoding.md). Passes all 30
+Java implementation of the [encoding spec](../docs/encoding.md). Passes all 37
 [conformance vectors](../testdata/).
 
 ```java
