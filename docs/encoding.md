@@ -76,6 +76,14 @@ a breaking change to stored data.**
 > also base64s `bytes` and stringifies NaN, neither of which this spec does. Every
 > one of those failures is silent: the write succeeds, the query is quietly wrong.
 
+**Decoding accepts either numeric type.** A `double` or `float` field must
+decode from a Firestore **Integer** as well as a Double. This is not a
+convenience: the JavaScript SDK stores an integral double as an integer
+([§8](#8-language-notes)), so a document written by one language has to stay
+readable by another. Coerce numerically rather than type-checking the incoming
+value. The reverse does not arise -- an integer field is only ever written as an
+Integer.
+
 ### 2.1 Unsigned 64-bit
 
 `uint64` and `fixed64` range up to 2^64−1; Firestore's integer is a **signed**
@@ -392,6 +400,10 @@ not of this encoding.
 > and not negative zero writes `integerValue`, anything else writes `doubleValue`.
 > JavaScript has one numeric type, so a proto `double` field holding `3.0` is
 > stored as a Firestore **integer** — where Dart and Java store a double.
+>
+> The window is bounded: `isSafeInteger` is false beyond 2^53, so an integral
+> double larger than that is still stored as a double. Only integral values
+> within the safe-integer range flip.
 >
 > The proto round-trip still works, and Firestore orders integers and doubles
 > together by value, so queries are unaffected. What diverges is the stored type:

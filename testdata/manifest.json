@@ -45,6 +45,14 @@
       "note": "NaN and the infinities are native Firestore doubles. In REST JSON they are carried as strings because JSON numbers cannot express them."
     },
     {
+      "name": "double_from_integer",
+      "message": "codebinge.firestore.codec.testdata.v1.Scalars",
+      "direction": "decode",
+      "message_file": "cases/double_from_integer.message.json",
+      "document_file": "cases/double_from_integer.document.json",
+      "note": "A double or float field must decode from a Firestore Integer, not only from a Double. Nothing in the schema makes this optional: the JavaScript SDK stores an integral double as an integer (§8), so a document written by one language must stay readable by another. Decode-only -- re-encoding yields a Double, which is correct."
+    },
+    {
       "name": "enums",
       "message": "codebinge.firestore.codec.testdata.v1.Enums",
       "direction": "roundtrip",
