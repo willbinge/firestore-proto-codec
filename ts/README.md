@@ -1,4 +1,4 @@
-# @codebinge/firestore-proto-codec
+# firestore-proto-codec (TypeScript)
 
 TypeScript implementation of the [encoding spec](../docs/encoding.md). Passes all
 37 [conformance vectors](../testdata/).

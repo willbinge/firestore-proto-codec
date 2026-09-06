@@ -1,5 +1,5 @@
 {
-  "name": "@codebinge/firestore-proto-codec",
+  "name": "firestore-proto-codec",
   "version": "0.1.0",
   "description": "Encode a protobuf message as a Firestore value, and decode it back.",
   "license": "Apache-2.0",
