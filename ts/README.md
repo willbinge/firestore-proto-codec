@@ -1,7 +1,9 @@
 # firestore-proto-codec (TypeScript)
 
-TypeScript implementation of the [encoding spec](../docs/encoding.md). Passes all
-37 [conformance vectors](../testdata/).
+TypeScript implementation of the
+[encoding spec](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md).
+Passes all 37
+[conformance vectors](https://github.com/willbinge/firestore-proto-codec/tree/main/testdata).
 
 ```ts
 const codec = new FirestoreProtoCodec();
@@ -67,7 +69,9 @@ Keeping this an interface is why the core has no Firebase dependency.
 
 ## No registration step
 
-Unlike the [Dart implementation](../dart/), nothing needs registering. protobuf-es
+Unlike the
+[Dart implementation](https://github.com/willbinge/firestore-proto-codec/tree/main/dart),
+nothing needs registering. protobuf-es
 keeps custom options and field presence on the descriptor, so `getOption()` and
 `field.presence` answer everything the codec needs directly from the schema.
 
@@ -92,8 +96,9 @@ schemas the web client writes.
 > type, so a rule asserting `is float` will disagree across languages. There is
 > no workaround in the SDK.
 
-`DocumentReference` is not modelled at all ([§7](../docs/encoding.md#7-options)) --
-store document paths in plain `string` fields.
+`DocumentReference` is not modelled at all
+([§7](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md#7-options))
+-- store document paths in plain `string` fields.
 
 ## Development
 
