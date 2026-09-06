@@ -62,6 +62,16 @@ generated file's options with its own extensions registered, so
 `fd.getOptions().getExtension(Options.field)` works directly.
 `ProtoGencodeTest` pins that behaviour.
 
+## Decode trusts the document's types
+
+Decoding narrows numerically rather than checking: an integer field reads its
+value through `Number.intValue()` / `longValue()`, so a stored value outside
+the field's range wraps silently rather than failing. That only arises when a
+document was written under a wider schema than the one reading it. A value of
+the wrong kind altogether, such as a String where an int64 field expects an
+Integer, surfaces as a `ClassCastException` rather than a `CodecError`. Neither
+is a data-loss path for documents this codec wrote.
+
 ## Signed integers hold unsigned values
 
 Java stores both `uint32` and `uint64` in signed types, so a value past the

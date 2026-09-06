@@ -73,6 +73,13 @@ keeps custom options and field presence on the descriptor, so `getOption()` and
 
 ## Known limits
 
+**Admin SDK only.** The web client SDK (`firebase/firestore`) does not accept
+`bigint` field values and throws on write, so a message with any signed 64-bit
+field cannot be handed to it. It also has no `useBigInt` setting, so integers
+above 2^53 would come back as imprecise `number`s on read. Use this codec from
+`firebase-admin` / `@google-cloud/firestore`, or keep 64-bit fields out of
+schemas the web client writes.
+
 > **JavaScript cannot write a Firestore double holding an integral value.**
 > The Firestore JS SDK picks the stored type from the value —
 > `Number.isSafeInteger(val)` and not negative zero writes `integerValue`,

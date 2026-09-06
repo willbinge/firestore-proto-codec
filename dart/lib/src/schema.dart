@@ -28,10 +28,17 @@ class FieldRules {
 
 /// Holds the custom options for message types that use them.
 ///
-/// Field *names* come from reflection and need no registration; only the
-/// options in `codebinge/firestore/codec/v1/options.proto` require the binary
-/// descriptor, because the Dart runtime does not carry them on `BuilderInfo`.
-/// A message with no annotated fields never needs registering.
+/// Field *names* and real `oneof` groups come from reflection and need no
+/// registration. Two things do not survive into `BuilderInfo` and require the
+/// binary descriptor:
+///
+/// 1. The options in `codebinge/firestore/codec/v1/options.proto`.
+/// 2. Proto3 `optional`. The runtime registers such a field identically to an
+///    implicit-presence one, so without the descriptor the codec cannot tell
+///    that a default value should still be written, and an unregistered
+///    message silently omits its `optional` fields when they hold defaults.
+///
+/// A message using neither needs no registration.
 class SchemaRegistry {
   SchemaRegistry();
 
@@ -57,10 +64,10 @@ class SchemaRegistry {
       for (final field in descriptor.field)
         if (field.hasOptions()) field.number: _rulesFrom(field.options),
     };
-    // A synthetic oneof is how proto3 `optional` is represented, and real
-    // oneof members have explicit presence too. The Dart runtime registers
-    // both exactly like an implicit-presence field, so the descriptor is the
-    // only place this distinction survives.
+    // A synthetic oneof is how proto3 `optional` is represented, and this is
+    // the only place the distinction survives: the runtime registers such a
+    // field exactly like an implicit-presence one. Real oneof members are
+    // also collected here, harmlessly; BuilderInfo.oneofs already covers them.
     _explicitPresence[name] = {
       for (final field in descriptor.field)
         if (field.hasOneofIndex()) field.number,
@@ -69,7 +76,8 @@ class SchemaRegistry {
 
   /// Whether the field tracks presence, so that a default value is still
   /// written. False for unregistered messages, which is correct for any
-  /// message that uses neither `optional` nor `oneof`.
+  /// message without proto3 `optional` fields; real `oneof` members are
+  /// handled from `BuilderInfo.oneofs` without registration.
   bool hasExplicitPresence(String qualifiedMessageName, int tagNumber) =>
       _explicitPresence[qualifiedMessageName]?.contains(tagNumber) ?? false;
 

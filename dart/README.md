@@ -68,13 +68,15 @@ Register a message when it uses either:
 
 1. **Custom options** from `options.proto` — `skip`, `name`, `enum_as`,
    `omit_when_default`, `kind`.
-2. **`optional` scalars, or `oneof` members.** This one is easy to miss.
-   package:protobuf registers a proto3 `optional` field *identically* to an
-   implicit-presence one, so without the descriptor the codec cannot tell that
-   a default value should still be written. An unregistered message with
-   `optional` fields silently omits them when they hold defaults.
+2. **Proto3 `optional` scalars.** This one is easy to miss. package:protobuf
+   registers a proto3 `optional` field *identically* to an implicit-presence
+   one, so without the descriptor the codec cannot tell that a default value
+   should still be written. An unregistered message with `optional` fields
+   silently omits them when they hold defaults.
 
-Messages using neither need no registration.
+Messages using neither need no registration. Real `oneof` groups are fine
+unregistered: the generated code records them on `BuilderInfo`, and the
+`oneof_set_*` vectors pass without registering `Choice`.
 
 ## Known limits
 
