@@ -74,9 +74,29 @@ format is a protobuf, and `google.firestore.v1.Value` declares
 | [`ts/`](ts/) | TypeScript implementation — passes all 37 vectors |
 | [`java/`](java/) | Java implementation — passes all 37 vectors |
 | `proto/codebinge/firestore/codec/v1/options.proto` | per-field encoding options |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | how to change the encoding, and why vectors come first |
 
 A conforming implementation in any language must pass the vectors described in
 [§9](docs/encoding.md#9-conformance).
+
+Each package ships its own copy of `options.proto`, so annotating your own
+schemas needs no separate download. `tool/sync-options-proto.sh` keeps the
+copies identical to the canonical file, and CI enforces it.
+
+## Licensing and use
+
+Apache-2.0. The specification is meant to be implemented and `testdata/` is
+meant to be copied into other implementations' repositories and run as their
+tests — the license permits both, and [§9](docs/encoding.md#9-conformance)
+depends on it.
+
+Read [§10](docs/encoding.md#10-stability) before storing production data: this
+is a draft specification, and the option extension number in
+[§7](docs/encoding.md#7-options) is provisional.
+
+*Not affiliated with, endorsed by, or sponsored by Google LLC. "Firestore",
+"Firebase", and "Protocol Buffers" are trademarks of Google LLC, used here only
+to describe what this software interoperates with.*
 
 ---
 

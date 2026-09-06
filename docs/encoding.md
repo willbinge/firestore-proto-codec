@@ -566,3 +566,45 @@ negative.
 **These come before a codec, not after.** They are useful even where a mapping
 stays hand-written, and they are what makes "conforming implementation" mean
 something.
+
+## 10. Stability
+
+**This is specification v0.1, draft.** Draft means the encoding may still change
+in ways that invalidate stored data, and no compatibility is promised between
+draft revisions. Do not store production data under a draft revision without
+being willing to rewrite it.
+
+Frozen at v1.0, and breaking to change afterwards:
+
+- **The field naming rule** ([§1](#1-field-naming)). Renaming one proto field is
+  already a breaking change to stored data; changing the *rule* rewrites every
+  document ever written.
+- **Enum value names** ([§4](#4-enums)), which are permanent from the moment
+  they are first written.
+- **The option extension number** ([§7](#7-options)), which must be registered
+  before v1.0 for exactly this reason.
+- **The seven error names** ([§9](#9-conformance)). Implementations report
+  against them, so renaming one silently breaks every harness.
+- **`manifest.json`'s `version` and the vector file layout**, which every
+  implementation's test harness reads.
+
+Free to change at any time, draft or released:
+
+- **Adding conformance vectors.** An implementation that stops passing because a
+  vector was added was already non-conforming; the vector pins behavior the spec
+  already required.
+- **Adding `Kind` or `EnumEncoding` values.** They are inert for fields that do
+  not use them. Note that *removing* one is not free — `KIND_REFERENCE` was
+  removed during draft, which a released spec could not have done.
+- Anything in this document that is commentary rather than a rule.
+
+### Spec version and package versions are independent
+
+Each implementation versions on its own and declares which specification version
+it implements. They are not required to match, and today's coincidence — spec
+v0.1 alongside three packages at 0.1.0 — is not a promise.
+
+Coupling them would mean an implementation could not ship a bug fix without
+implying a specification revision, and could not reach 1.0 ahead of the spec or
+lag behind it. A conforming implementation is defined by the vectors it passes
+([§9](#9-conformance)), not by its version number.
