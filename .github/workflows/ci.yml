@@ -14,6 +14,16 @@ permissions:
   contents: read
 
 jobs:
+  # Each package ships its own copy of options.proto, because registries publish
+  # only what is under the package directory. Copies drift silently, so the
+  # canonical file is diffed against all three here.
+  options-proto:
+    name: options.proto in sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./tool/sync-options-proto.sh --check
+
   dart:
     name: Dart
     runs-on: ubuntu-latest

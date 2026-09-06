@@ -20,6 +20,19 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <name>Code Binge LLC</name>
+      <url>https://github.com/willbinge</url>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/willbinge/firestore-proto-codec.git</connection>
+    <developerConnection>scm:git:git@github.com:willbinge/firestore-proto-codec.git</developerConnection>
+    <url>https://github.com/willbinge/firestore-proto-codec</url>
+  </scm>
+
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

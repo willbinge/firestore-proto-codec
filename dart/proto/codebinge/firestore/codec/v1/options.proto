@@ -1,0 +1,66 @@
+// Copyright 2026 Code Binge LLC
+
+syntax = "proto3";
+
+package codebinge.firestore.codec.v1;
+
+import "google/protobuf/descriptor.proto";
+
+option java_package = "com.codebinge.firestore.codec.v1";
+option java_multiple_files = true;
+
+// Per-field encoding options. See docs/encoding.md §7.
+//
+// NOTE: extension number 50000 is provisional. 50000-99999 is protobuf's
+// organization-internal range -- shared scratch space every organization is told
+// to use freely -- so a collision there is documented behavior, not bad luck,
+// and it surfaces as soon as two published schemas meet in one descriptor pool.
+// protocolbuffers/protobuf#29013 reports exactly that failure. Replace this with
+// a Global Extension Registry number before any public release: changing it
+// afterwards is breaking, and it is baked into generated identifiers too.
+extend google.protobuf.FieldOptions {
+  Field field = 50000;
+}
+
+message Field {
+  // Never encoded.
+  bool skip = 1;
+
+  // Stored-name override. Exists only for adopting an existing collection;
+  // the default is the proto field name verbatim (§1).
+  string name = 2;
+
+  // Default: encode enum values as their name string (§4).
+  EnumEncoding enum_as = 3;
+
+  // Default true: omit singular scalar fields holding their default value (§6).
+  // Set false where an index or security rule depends on the field existing.
+  //
+  // Explicit presence is required. The intended default is true, and a proto3
+  // implicit-presence bool would not serialize `false`, leaving "set to false"
+  // indistinguishable from "not set".
+  optional bool omit_when_default = 4;
+
+  // Overrides the encoding inferred from the proto type.
+  Kind kind = 5;
+}
+
+enum Kind {
+  // Infer from the proto type. The default for every field.
+  KIND_UNSPECIFIED = 0;
+
+  // A project's own lat/lng message -> GeoPoint (§3.3). Not needed for
+  // google.type.LatLng, which is recognized automatically. The annotated
+  // message must have exactly two double fields named `latitude` and
+  // `longitude`.
+  KIND_GEO_POINT = 1;
+
+  // uint64/fixed64 -> Integer rather than String, keeping the field ordered
+  // and queryable. Throws at encode time above 2^63-1 (§2.1).
+  KIND_UNSIGNED_AS_INTEGER = 2;
+}
+
+enum EnumEncoding {
+  ENUM_ENCODING_NAME = 0;
+  ENUM_ENCODING_NUMBER = 1;
+}

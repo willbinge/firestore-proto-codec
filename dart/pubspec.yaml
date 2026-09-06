@@ -6,6 +6,17 @@ repository: https://github.com/willbinge/firestore-proto-codec/tree/main/dart
 environment:
   sdk: ^3.6.0
 
+# Web is deliberately absent. int64 fields convert through Dart `int`, which is
+# a double on the web and loses precision above 2^53; see the Known limits
+# section of README.md. Without this, pub would advertise web support that
+# silently corrupts data.
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  windows:
+
 dependencies:
   fixnum: ^1.1.0
   protobuf: ^6.0.0
