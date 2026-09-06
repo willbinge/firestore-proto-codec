@@ -20,7 +20,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file testdata.proto.
  */
 export const file_testdata: GenFile = /*@__PURE__*/
-  fileDesc("Cg50ZXN0ZGF0YS5wcm90bxIlY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy50ZXN0ZGF0YS52MSLTAgoHU2NhbGFycxIUCgxzdHJpbmdfZmllbGQYASABKAkSEgoKYm9vbF9maWVsZBgCIAEoCBITCgtieXRlc19maWVsZBgDIAEoDBITCgtpbnQzMl9maWVsZBgEIAEoBRIUCgxzaW50MzJfZmllbGQYBSABKBESFgoOc2ZpeGVkMzJfZmllbGQYBiABKA8SFAoMdWludDMyX2ZpZWxkGAcgASgNEhUKDWZpeGVkMzJfZmllbGQYCCABKAcSEwoLaW50NjRfZmllbGQYCSABKAMSFAoMc2ludDY0X2ZpZWxkGAogASgSEhYKDnNmaXhlZDY0X2ZpZWxkGAsgASgQEhQKDHVpbnQ2NF9maWVsZBgMIAEoBBIVCg1maXhlZDY0X2ZpZWxkGA0gASgGEhQKDGRvdWJsZV9maWVsZBgOIAEoARITCgtmbG9hdF9maWVsZBgPIAEoAiJKCgdEb3VibGVzEhEKCW5hbl9maWVsZBgBIAEoARIVCg1wb3NfaW5mX2ZpZWxkGAIgASgBEhUKDW5lZ19pbmZfZmllbGQYAyABKAEikQEKBUVudW1zEj4KB2FzX25hbWUYASABKA4yLS5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxLlN0YXR1cxJICglhc19udW1iZXIYAiABKA4yLS5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxLlN0YXR1c0IGgrUYAhgBIhYKBUlubmVyEg0KBXZhbHVlGAEgASgJIpUBCghQcmVzZW5jZRIXCgpvcHRfc3RyaW5nGAEgASgJSACIAQESFgoJb3B0X2ludDMyGAIgASgFSAGIAQESOwoFaW5uZXIYAyABKAsyLC5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxLklubmVyQg0KC19vcHRfc3RyaW5nQgwKCl9vcHRfaW50MzIioAEKCFVuc2lnbmVkEgwKBHplcm8YASABKAQSEgoKbWF4X3NpZ25lZBgCIAEoBBIZChFtaW5fdW5zaWduZWRfb25seRgDIAEoBBIUCgxtYXhfdW5zaWduZWQYBCABKAQSDQoFZml4ZWQYBSABKAYSGgoKYXNfaW50ZWdlchgGIAEoBEIGgrUYAigCEhYKBmFsd2F5cxgHIAEoBEIGgrUYAiAAIo4BCglXZWxsS25vd24SLQoJdGltZXN0YW1wGAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIrCghkdXJhdGlvbhgCIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhIlCghsb2NhdGlvbhgDIAEoCzITLmdvb2dsZS50eXBlLkxhdExuZyLZAwoJQ29tcG9zaXRlEjwKBnNpbmdsZRgBIAEoCzIsLmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuSW5uZXISDwoHc3RyaW5ncxgCIAMoCRI+CghtZXNzYWdlcxgDIAMoCzIsLmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuSW5uZXISUwoKc3RyaW5nX21hcBgEIAMoCzI/LmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuQ29tcG9zaXRlLlN0cmluZ01hcEVudHJ5ElUKC21lc3NhZ2VfbWFwGAUgAygLMkAuY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy50ZXN0ZGF0YS52MS5Db21wb3NpdGUuTWVzc2FnZU1hcEVudHJ5GjAKDlN0cmluZ01hcEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEaXwoPTWVzc2FnZU1hcEVudHJ5EgsKA2tleRgBIAEoCRI7CgV2YWx1ZRgCIAEoCzIsLmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuSW5uZXI6AjgBIlQKB09wdGlvbnMSDAoEa2VwdBgBIAEoCRIXCgdkcm9wcGVkGAIgASgJQgaCtRgCCAESIgoHcmVuYW1lZBgDIAEoCUIRgrUYDRILc3RvcmVkX25hbWUiWwoJUmVjdXJzaXZlEg0KBWxhYmVsGAEgASgJEj8KBWNoaWxkGAIgASgLMjAuY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy50ZXN0ZGF0YS52MS5SZWN1cnNpdmUqRAoGU3RhdHVzEhIKDlNUQVRVU19VTktOT1dOEAASEQoNU1RBVFVTX0FDVElWRRABEhMKD1NUQVRVU19BUkNISVZFRBACQi0KKWNvbS5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxUAFiBnByb3RvMw", [file_google_protobuf_duration, file_google_protobuf_timestamp, file_google_type_latlng, file_codebinge_firestore_codec_v1_options]);
+  fileDesc("Cg50ZXN0ZGF0YS5wcm90bxIlY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy50ZXN0ZGF0YS52MSLTAgoHU2NhbGFycxIUCgxzdHJpbmdfZmllbGQYASABKAkSEgoKYm9vbF9maWVsZBgCIAEoCBITCgtieXRlc19maWVsZBgDIAEoDBITCgtpbnQzMl9maWVsZBgEIAEoBRIUCgxzaW50MzJfZmllbGQYBSABKBESFgoOc2ZpeGVkMzJfZmllbGQYBiABKA8SFAoMdWludDMyX2ZpZWxkGAcgASgNEhUKDWZpeGVkMzJfZmllbGQYCCABKAcSEwoLaW50NjRfZmllbGQYCSABKAMSFAoMc2ludDY0X2ZpZWxkGAogASgSEhYKDnNmaXhlZDY0X2ZpZWxkGAsgASgQEhQKDHVpbnQ2NF9maWVsZBgMIAEoBBIVCg1maXhlZDY0X2ZpZWxkGA0gASgGEhQKDGRvdWJsZV9maWVsZBgOIAEoARITCgtmbG9hdF9maWVsZBgPIAEoAiJKCgdEb3VibGVzEhEKCW5hbl9maWVsZBgBIAEoARIVCg1wb3NfaW5mX2ZpZWxkGAIgASgBEhUKDW5lZ19pbmZfZmllbGQYAyABKAEikQEKBUVudW1zEj4KB2FzX25hbWUYASABKA4yLS5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxLlN0YXR1cxJICglhc19udW1iZXIYAiABKA4yLS5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxLlN0YXR1c0IGgrUYAhgBIhYKBUlubmVyEg0KBXZhbHVlGAEgASgJIpUBCghQcmVzZW5jZRIXCgpvcHRfc3RyaW5nGAEgASgJSACIAQESFgoJb3B0X2ludDMyGAIgASgFSAGIAQESOwoFaW5uZXIYAyABKAsyLC5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxLklubmVyQg0KC19vcHRfc3RyaW5nQgwKCl9vcHRfaW50MzIioAEKCFVuc2lnbmVkEgwKBHplcm8YASABKAQSEgoKbWF4X3NpZ25lZBgCIAEoBBIZChFtaW5fdW5zaWduZWRfb25seRgDIAEoBBIUCgxtYXhfdW5zaWduZWQYBCABKAQSDQoFZml4ZWQYBSABKAYSGgoKYXNfaW50ZWdlchgGIAEoBEIGgrUYAigCEhYKBmFsd2F5cxgHIAEoBEIGgrUYAiAAIo4BCglXZWxsS25vd24SLQoJdGltZXN0YW1wGAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIrCghkdXJhdGlvbhgCIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhIlCghsb2NhdGlvbhgDIAEoCzITLmdvb2dsZS50eXBlLkxhdExuZyLZAwoJQ29tcG9zaXRlEjwKBnNpbmdsZRgBIAEoCzIsLmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuSW5uZXISDwoHc3RyaW5ncxgCIAMoCRI+CghtZXNzYWdlcxgDIAMoCzIsLmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuSW5uZXISUwoKc3RyaW5nX21hcBgEIAMoCzI/LmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuQ29tcG9zaXRlLlN0cmluZ01hcEVudHJ5ElUKC21lc3NhZ2VfbWFwGAUgAygLMkAuY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy50ZXN0ZGF0YS52MS5Db21wb3NpdGUuTWVzc2FnZU1hcEVudHJ5GjAKDlN0cmluZ01hcEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEaXwoPTWVzc2FnZU1hcEVudHJ5EgsKA2tleRgBIAEoCRI7CgV2YWx1ZRgCIAEoCzIsLmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuSW5uZXI6AjgBIlQKB09wdGlvbnMSDAoEa2VwdBgBIAEoCRIXCgdkcm9wcGVkGAIgASgJQgaCtRgCCAESIgoHcmVuYW1lZBgDIAEoCUIRgrUYDRILc3RvcmVkX25hbWUicQoGQ2hvaWNlEg4KBHRleHQYASABKAlIABIQCgZudW1iZXIYAiABKAVIABI9CgVpbm5lchgDIAEoCzIsLmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudGVzdGRhdGEudjEuSW5uZXJIAEIGCgRraW5kIjMKEFN0cmluZ2lmaWVkSW50NjQSDgoCaWQYASABKANCAjABEg8KA2lkcxgCIAMoA0ICMAEiWwoJUmVjdXJzaXZlEg0KBWxhYmVsGAEgASgJEj8KBWNoaWxkGAIgASgLMjAuY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy50ZXN0ZGF0YS52MS5SZWN1cnNpdmUqRAoGU3RhdHVzEhIKDlNUQVRVU19VTktOT1dOEAASEQoNU1RBVFVTX0FDVElWRRABEhMKD1NUQVRVU19BUkNISVZFRBACQi0KKWNvbS5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYxUAFiBnByb3RvMw", [file_google_protobuf_duration, file_google_protobuf_timestamp, file_google_type_latlng, file_codebinge_firestore_codec_v1_options]);
 
 /**
  * Every scalar type in one message (§2).
@@ -368,6 +368,71 @@ export const OptionsSchema: GenMessage<Options> = /*@__PURE__*/
   messageDesc(file_testdata, 8);
 
 /**
+ * Oneof members carry explicit presence (§6): the selected member is written
+ * even when it holds its default, and it must decode back into the oneof rather
+ * than into a stray property.
+ *
+ * @generated from message codebinge.firestore.codec.testdata.v1.Choice
+ */
+export type Choice = Message<"codebinge.firestore.codec.testdata.v1.Choice"> & {
+  /**
+   * @generated from oneof codebinge.firestore.codec.testdata.v1.Choice.kind
+   */
+  kind: {
+    /**
+     * @generated from field: string text = 1;
+     */
+    value: string;
+    case: "text";
+  } | {
+    /**
+     * @generated from field: int32 number = 2;
+     */
+    value: number;
+    case: "number";
+  } | {
+    /**
+     * @generated from field: codebinge.firestore.codec.testdata.v1.Inner inner = 3;
+     */
+    value: Inner;
+    case: "inner";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message codebinge.firestore.codec.testdata.v1.Choice.
+ * Use `create(ChoiceSchema)` to create a new message.
+ */
+export const ChoiceSchema: GenMessage<Choice> = /*@__PURE__*/
+  messageDesc(file_testdata, 9);
+
+/**
+ * `jstype = JS_STRING` changes only the in-memory JavaScript type of an int64
+ * field; the Firestore type is still Integer (§8). Dart and Java ignore the
+ * option entirely.
+ *
+ * @generated from message codebinge.firestore.codec.testdata.v1.StringifiedInt64
+ */
+export type StringifiedInt64 = Message<"codebinge.firestore.codec.testdata.v1.StringifiedInt64"> & {
+  /**
+   * @generated from field: int64 id = 1 [jstype = JS_STRING];
+   */
+  id: string;
+
+  /**
+   * @generated from field: repeated int64 ids = 2 [jstype = JS_STRING];
+   */
+  ids: string[];
+};
+
+/**
+ * Describes the message codebinge.firestore.codec.testdata.v1.StringifiedInt64.
+ * Use `create(StringifiedInt64Schema)` to create a new message.
+ */
+export const StringifiedInt64Schema: GenMessage<StringifiedInt64> = /*@__PURE__*/
+  messageDesc(file_testdata, 10);
+
+/**
  * Nesting depth (§5). A chain of N `child` values puts the innermost map at
  * depth N; Firestore's limit is 20.
  *
@@ -390,7 +455,7 @@ export type Recursive = Message<"codebinge.firestore.codec.testdata.v1.Recursive
  * Use `create(RecursiveSchema)` to create a new message.
  */
 export const RecursiveSchema: GenMessage<Recursive> = /*@__PURE__*/
-  messageDesc(file_testdata, 9);
+  messageDesc(file_testdata, 11);
 
 /**
  * @generated from enum codebinge.firestore.codec.testdata.v1.Status

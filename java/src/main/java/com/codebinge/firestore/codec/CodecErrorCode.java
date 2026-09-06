@@ -10,7 +10,8 @@ public enum CodecErrorCode {
   LATLNG_OUT_OF_RANGE,
   NESTING_TOO_DEEP,
   UNSUPPORTED_MAP_KEY,
-  UNSUPPORTED_TYPE;
+  UNSUPPORTED_TYPE,
+  ENUM_VALUE_UNKNOWN;
 
   /** The name reported by the conformance suite. */
   public String wireName() {

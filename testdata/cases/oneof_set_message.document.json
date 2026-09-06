@@ -1,0 +1,11 @@
+{
+  "inner": {
+    "mapValue": {
+      "fields": {
+        "value": {
+          "stringValue": "v"
+        }
+      }
+    }
+  }
+}

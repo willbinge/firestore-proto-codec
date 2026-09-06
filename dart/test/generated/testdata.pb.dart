@@ -946,6 +946,171 @@ class Options extends $pb.GeneratedMessage {
   void clearRenamed() => $_clearField(3);
 }
 
+enum Choice_Kind { text, number, inner, notSet }
+
+/// Oneof members carry explicit presence (§6): the selected member is written
+/// even when it holds its default, and it must decode back into the oneof rather
+/// than into a stray property.
+class Choice extends $pb.GeneratedMessage {
+  factory Choice({
+    $core.String? text,
+    $core.int? number,
+    Inner? inner,
+  }) {
+    final result = create();
+    if (text != null) result.text = text;
+    if (number != null) result.number = number;
+    if (inner != null) result.inner = inner;
+    return result;
+  }
+
+  Choice._();
+
+  factory Choice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Choice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, Choice_Kind> _Choice_KindByTag = {
+    1: Choice_Kind.text,
+    2: Choice_Kind.number,
+    3: Choice_Kind.inner,
+    0: Choice_Kind.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Choice',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'codebinge.firestore.codec.testdata.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2, 3])
+    ..aOS(1, _omitFieldNames ? '' : 'text')
+    ..aI(2, _omitFieldNames ? '' : 'number')
+    ..aOM<Inner>(3, _omitFieldNames ? '' : 'inner', subBuilder: Inner.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Choice clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Choice copyWith(void Function(Choice) updates) =>
+      super.copyWith((message) => updates(message as Choice)) as Choice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Choice create() => Choice._();
+  @$core.override
+  Choice createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Choice getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Choice>(create);
+  static Choice? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  Choice_Kind whichKind() => _Choice_KindByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  void clearKind() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get text => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set text($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasText() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearText() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get number => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set number($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasNumber() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNumber() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  Inner get inner => $_getN(2);
+  @$pb.TagNumber(3)
+  set inner(Inner value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInner() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInner() => $_clearField(3);
+  @$pb.TagNumber(3)
+  Inner ensureInner() => $_ensure(2);
+}
+
+/// `jstype = JS_STRING` changes only the in-memory JavaScript type of an int64
+/// field; the Firestore type is still Integer (§8). Dart and Java ignore the
+/// option entirely.
+class StringifiedInt64 extends $pb.GeneratedMessage {
+  factory StringifiedInt64({
+    $fixnum.Int64? id,
+    $core.Iterable<$fixnum.Int64>? ids,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (ids != null) result.ids.addAll(ids);
+    return result;
+  }
+
+  StringifiedInt64._();
+
+  factory StringifiedInt64.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StringifiedInt64.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StringifiedInt64',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'codebinge.firestore.codec.testdata.v1'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'id')
+    ..p<$fixnum.Int64>(2, _omitFieldNames ? '' : 'ids', $pb.PbFieldType.K6)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StringifiedInt64 clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StringifiedInt64 copyWith(void Function(StringifiedInt64) updates) =>
+      super.copyWith((message) => updates(message as StringifiedInt64))
+          as StringifiedInt64;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StringifiedInt64 create() => StringifiedInt64._();
+  @$core.override
+  StringifiedInt64 createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static StringifiedInt64 getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StringifiedInt64>(create);
+  static StringifiedInt64? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get id => $_getI64(0);
+  @$pb.TagNumber(1)
+  set id($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$fixnum.Int64> get ids => $_getList(1);
+}
+
 /// Nesting depth (§5). A chain of N `child` values puts the innermost map at
 /// depth N; Firestore's limit is 20.
 class Recursive extends $pb.GeneratedMessage {

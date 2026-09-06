@@ -322,6 +322,61 @@ final $typed_data.Uint8List optionsDescriptor = $convert.base64Decode(
     'CgdPcHRpb25zEhIKBGtlcHQYASABKAlSBGtlcHQSIAoHZHJvcHBlZBgCIAEoCUIGgrUYAggBUg'
     'dkcm9wcGVkEisKB3JlbmFtZWQYAyABKAlCEYK1GA0SC3N0b3JlZF9uYW1lUgdyZW5hbWVk');
 
+@$core.Deprecated('Use choiceDescriptor instead')
+const Choice$json = {
+  '1': 'Choice',
+  '2': [
+    {'1': 'text', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'text'},
+    {'1': 'number', '3': 2, '4': 1, '5': 5, '9': 0, '10': 'number'},
+    {
+      '1': 'inner',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.codebinge.firestore.codec.testdata.v1.Inner',
+      '9': 0,
+      '10': 'inner'
+    },
+  ],
+  '8': [
+    {'1': 'kind'},
+  ],
+};
+
+/// Descriptor for `Choice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List choiceDescriptor = $convert.base64Decode(
+    'CgZDaG9pY2USFAoEdGV4dBgBIAEoCUgAUgR0ZXh0EhgKBm51bWJlchgCIAEoBUgAUgZudW1iZX'
+    'ISRAoFaW5uZXIYAyABKAsyLC5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnRlc3RkYXRhLnYx'
+    'LklubmVySABSBWlubmVyQgYKBGtpbmQ=');
+
+@$core.Deprecated('Use stringifiedInt64Descriptor instead')
+const StringifiedInt64$json = {
+  '1': 'StringifiedInt64',
+  '2': [
+    {
+      '1': 'id',
+      '3': 1,
+      '4': 1,
+      '5': 3,
+      '8': {'6': 1},
+      '10': 'id',
+    },
+    {
+      '1': 'ids',
+      '3': 2,
+      '4': 3,
+      '5': 3,
+      '8': {'6': 1},
+      '10': 'ids',
+    },
+  ],
+};
+
+/// Descriptor for `StringifiedInt64`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List stringifiedInt64Descriptor = $convert.base64Decode(
+    'ChBTdHJpbmdpZmllZEludDY0EhIKAmlkGAEgASgDQgIwAVICaWQSFAoDaWRzGAIgAygDQgIwAV'
+    'IDaWRz');
+
 @$core.Deprecated('Use recursiveDescriptor instead')
 const Recursive$json = {
   '1': 'Recursive',

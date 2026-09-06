@@ -6,7 +6,8 @@ export type CodecErrorCode =
   | "LATLNG_OUT_OF_RANGE"
   | "NESTING_TOO_DEEP"
   | "UNSUPPORTED_MAP_KEY"
-  | "UNSUPPORTED_TYPE";
+  | "UNSUPPORTED_TYPE"
+  | "ENUM_VALUE_UNKNOWN";
 
 /** Thrown for anything the encoding refuses to represent. */
 export class CodecError extends Error {

@@ -353,8 +353,11 @@ class FirestoreProtoCodec {
     }
     if (qualified == _durationType) {
       final micros = raw as int;
+      // remainder(), not %: Dart's % is Euclidean and never negative, which
+      // would turn -1.5s (seconds -1, nanos -500000000) into seconds -1,
+      // nanos +500000000, i.e. -0.5s. Protobuf keeps both parts the same sign.
       sub.setField(1, Int64(micros ~/ 1000000));
-      sub.setField(2, (micros % 1000000) * 1000);
+      sub.setField(2, micros.remainder(1000000) * 1000);
       return sub;
     }
     if (qualified == _latLngType || rules.geoPoint) {

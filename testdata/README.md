@@ -18,6 +18,12 @@ and either the files to compare or the error to expect:
 Error names come from the fixed set in `manifest.errors`. An implementation may
 use its own exception types, but must map them to these names to report results.
 
+A case may carry `requires`, naming a runtime capability described in
+`manifest.requirements`. An implementation whose runtime lacks it cannot build
+the input and should skip the case, reporting why; it is conformant by
+construction. `enum_unknown_number` requires `open_enum_values`, which Dart's
+closed enums do not provide.
+
 Compile the schemas with the repo root and `testdata/schema` on the include path:
 
 ```bash

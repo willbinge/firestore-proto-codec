@@ -232,6 +232,13 @@ The cost, which must be accepted explicitly:
 - **Unknown names decode to the zero value**, never throw. Reserve `0` as
   `*_UNSPECIFIED`/`*_UNKNOWN` in every enum, or old readers break on documents
   written by newer writers.
+- **Unknown numbers do not encode.** A message parsed from a newer writer can
+  hold an enum number the reader's schema has no name for (Java and protobuf-es
+  keep it; Dart's closed enums cannot). There is no correct name-encoding for
+  it: writing the raw integer mixes types on a String field, and writing a
+  runtime's synthetic placeholder name decodes to zero everywhere, silently
+  destroying the newer writer's value. The codec throws `ENUM_VALUE_UNKNOWN`
+  instead. Under `enum_as: NUMBER` the integer is representable and is written.
 
 Per-field escape hatch: `enum_as: NUMBER`.
 
@@ -395,6 +402,30 @@ unsigned `bigint`, so there is no sign to flip and `toString()` is already
 correct. The trap belongs to runtimes that reuse a signed 64-bit integer for
 unsigned values, which is Dart and Java.
 
+**TypeScript has a different trap: `jstype = JS_STRING`.** protobuf-es honours
+the option and generates such a 64-bit field as a `string`, where Dart and Java
+ignore it. The option changes only the in-memory JavaScript type; the encoding
+is defined on the integer, so an implementation must coerce through `BigInt`
+before encoding, treat `"0"` as the default under [§6](#6-presence-and-defaults),
+and hand the value back as a string on decode. Passing the value through writes
+a Firestore **String** for a field every other language writes as an Integer —
+the split [§2.1](#21-unsigned-64-bit) exists to prevent. The
+`int64_jstype_string` vectors pin this.
+
+**A oneof member is stored under the oneof's name in protobuf-es**, as one
+tagged `{ case, value }` object; the member has no property of its own. A
+decoder that assigns the member name directly leaves the oneof unset and the
+value invisible to every protobuf-es API. Dart and Java set oneof members
+through the ordinary field setter, so only TypeScript needs the distinction.
+The `oneof_set_*` vectors pin it.
+
+**Splitting a Duration back into seconds and nanos needs a sign-preserving
+remainder.** Protobuf keeps both parts the same sign, so -1.5s is
+`seconds: -1, nanos: -500000000`. Java's `%` and JavaScript's `BigInt` `%` take
+the dividend's sign; Dart's `%` is Euclidean and never negative, and turns
+-1.5s into `seconds: -1, nanos: +500000000` — which is -0.5s. Use `remainder()`
+in Dart. The `duration_negative` vector pins it.
+
 **Java's signed-integer hazard is not limited to 64 bits.** `uint32` and
 `fixed32` live in a signed `int`, so a value above 2^31−1 reads back negative and
 must be widened with `Integer.toUnsignedLong` before encoding — the same shape of
@@ -450,11 +481,21 @@ an integer from a double, and that distinction is most of [§2](#2-scalar-types)
 
 Errors are reported by name from a fixed set: `UNSIGNED_MALFORMED`,
 `UNSIGNED_OUT_OF_RANGE`, `UNSIGNED_NOT_REPRESENTABLE`, `LATLNG_OUT_OF_RANGE`,
-`NESTING_TOO_DEEP`, `UNSUPPORTED_MAP_KEY`, `UNSUPPORTED_TYPE`. An implementation
-may raise whatever exception type it likes, so long as it maps to these.
+`NESTING_TOO_DEEP`, `UNSUPPORTED_MAP_KEY`, `UNSUPPORTED_TYPE`,
+`ENUM_VALUE_UNKNOWN`. An implementation may raise whatever exception type it
+likes, so long as it maps to these.
 
-Coverage: every scalar type; NaN and both infinities; both enum encodings and an
-unknown enum name; all-defaults; explicit presence set and unset; unsigned
+A case may carry a `requires` key naming a runtime capability from
+`manifest.requirements`. An implementation whose runtime lacks the capability
+cannot construct the input and may skip the case; it is conformant by
+construction. Today the only requirement is `open_enum_values`, which Dart's
+closed enums do not meet.
+
+Coverage: every scalar type; NaN and both infinities; both enum encodings, an
+unknown enum name, and an unknown enum number; all-defaults; explicit presence
+set and unset, including a oneof member at its default and a message-typed
+oneof member; a negative `Duration`; `int64` under `jstype = JS_STRING` at
+2^53+1 and at its default; unsigned
 round-trips at `0`, `2^63−1`, `2^63`, and `2^64−1` plus four decode rejections
 and an encode rejection; a `Timestamp` with sub-microsecond nanos; `Duration`;
 `LatLng` and an out-of-range rejection; nested, repeated, and map fields; the

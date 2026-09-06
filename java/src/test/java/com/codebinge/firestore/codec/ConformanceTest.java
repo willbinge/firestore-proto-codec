@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import com.codebinge.firestore.codec.testdata.v1.AnyField;
+import com.codebinge.firestore.codec.testdata.v1.Choice;
 import com.codebinge.firestore.codec.testdata.v1.Composite;
 import com.codebinge.firestore.codec.testdata.v1.Doubles;
 import com.codebinge.firestore.codec.testdata.v1.Enums;
@@ -17,6 +18,7 @@ import com.codebinge.firestore.codec.testdata.v1.IntKeyMap;
 import com.codebinge.firestore.codec.testdata.v1.Presence;
 import com.codebinge.firestore.codec.testdata.v1.Recursive;
 import com.codebinge.firestore.codec.testdata.v1.Scalars;
+import com.codebinge.firestore.codec.testdata.v1.StringifiedInt64;
 import com.codebinge.firestore.codec.testdata.v1.StructField;
 import com.codebinge.firestore.codec.testdata.v1.Unsigned;
 import com.codebinge.firestore.codec.testdata.v1.WellKnown;
@@ -56,6 +58,8 @@ class ConformanceTest {
           Composite.getDefaultInstance(),
           com.codebinge.firestore.codec.testdata.v1.Options.getDefaultInstance(),
           Recursive.getDefaultInstance(),
+          Choice.getDefaultInstance(),
+          StringifiedInt64.getDefaultInstance(),
           IntKeyMap.getDefaultInstance(),
           AnyField.getDefaultInstance(),
           StructField.getDefaultInstance(),

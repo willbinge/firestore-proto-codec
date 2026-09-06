@@ -1,0 +1,17 @@
+{
+  "id": {
+    "integerValue": "9007199254740993"
+  },
+  "ids": {
+    "arrayValue": {
+      "values": [
+        {
+          "integerValue": "1"
+        },
+        {
+          "integerValue": "-2"
+        }
+      ]
+    }
+  }
+}

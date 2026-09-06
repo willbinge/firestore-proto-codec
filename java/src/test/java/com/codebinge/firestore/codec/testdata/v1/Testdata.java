@@ -82,6 +82,16 @@ public final class Testdata extends com.google.protobuf.GeneratedFile {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_codebinge_firestore_codec_testdata_v1_Options_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_codebinge_firestore_codec_testdata_v1_Choice_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_codebinge_firestore_codec_testdata_v1_Choice_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_codebinge_firestore_codec_testdata_v1_StringifiedInt64_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_codebinge_firestore_codec_testdata_v1_StringifiedInt64_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_codebinge_firestore_codec_testdata_v1_Recursive_descriptor;
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -140,12 +150,16 @@ public final class Testdata extends com.google.protobuf.GeneratedFile {
       "irestore.codec.testdata.v1.Inner:\0028\001\"T\n\007" +
       "Options\022\014\n\004kept\030\001 \001(\t\022\027\n\007dropped\030\002 \001(\tB\006" +
       "\202\265\030\002\010\001\022\"\n\007renamed\030\003 \001(\tB\021\202\265\030\r\022\013stored_na" +
-      "me\"[\n\tRecursive\022\r\n\005label\030\001 \001(\t\022?\n\005child\030" +
-      "\002 \001(\01320.codebinge.firestore.codec.testda" +
-      "ta.v1.Recursive*D\n\006Status\022\022\n\016STATUS_UNKN" +
-      "OWN\020\000\022\021\n\rSTATUS_ACTIVE\020\001\022\023\n\017STATUS_ARCHI" +
-      "VED\020\002B-\n)com.codebinge.firestore.codec.t" +
-      "estdata.v1P\001b\006proto3"
+      "me\"q\n\006Choice\022\016\n\004text\030\001 \001(\tH\000\022\020\n\006number\030\002" +
+      " \001(\005H\000\022=\n\005inner\030\003 \001(\0132,.codebinge.firest" +
+      "ore.codec.testdata.v1.InnerH\000B\006\n\004kind\"3\n" +
+      "\020StringifiedInt64\022\016\n\002id\030\001 \001(\003B\0020\001\022\017\n\003ids" +
+      "\030\002 \003(\003B\0020\001\"[\n\tRecursive\022\r\n\005label\030\001 \001(\t\022?" +
+      "\n\005child\030\002 \001(\01320.codebinge.firestore.code" +
+      "c.testdata.v1.Recursive*D\n\006Status\022\022\n\016STA" +
+      "TUS_UNKNOWN\020\000\022\021\n\rSTATUS_ACTIVE\020\001\022\023\n\017STAT" +
+      "US_ARCHIVED\020\002B-\n)com.codebinge.firestore" +
+      ".codec.testdata.v1P\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -221,8 +235,20 @@ public final class Testdata extends com.google.protobuf.GeneratedFile {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_codebinge_firestore_codec_testdata_v1_Options_descriptor,
         new java.lang.String[] { "Kept", "Dropped", "Renamed", });
-    internal_static_codebinge_firestore_codec_testdata_v1_Recursive_descriptor =
+    internal_static_codebinge_firestore_codec_testdata_v1_Choice_descriptor =
       getDescriptor().getMessageType(9);
+    internal_static_codebinge_firestore_codec_testdata_v1_Choice_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_codebinge_firestore_codec_testdata_v1_Choice_descriptor,
+        new java.lang.String[] { "Text", "Number", "Inner", "Kind", });
+    internal_static_codebinge_firestore_codec_testdata_v1_StringifiedInt64_descriptor =
+      getDescriptor().getMessageType(10);
+    internal_static_codebinge_firestore_codec_testdata_v1_StringifiedInt64_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_codebinge_firestore_codec_testdata_v1_StringifiedInt64_descriptor,
+        new java.lang.String[] { "Id", "Ids", });
+    internal_static_codebinge_firestore_codec_testdata_v1_Recursive_descriptor =
+      getDescriptor().getMessageType(11);
     internal_static_codebinge_firestore_codec_testdata_v1_Recursive_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_codebinge_firestore_codec_testdata_v1_Recursive_descriptor,

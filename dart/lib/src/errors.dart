@@ -6,7 +6,8 @@ enum CodecErrorCode {
   latLngOutOfRange('LATLNG_OUT_OF_RANGE'),
   nestingTooDeep('NESTING_TOO_DEEP'),
   unsupportedMapKey('UNSUPPORTED_MAP_KEY'),
-  unsupportedType('UNSUPPORTED_TYPE');
+  unsupportedType('UNSUPPORTED_TYPE'),
+  enumValueUnknown('ENUM_VALUE_UNKNOWN');
 
   const CodecErrorCode(this.wireName);
 

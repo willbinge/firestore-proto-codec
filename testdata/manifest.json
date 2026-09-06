@@ -17,7 +17,8 @@
     "LATLNG_OUT_OF_RANGE",
     "NESTING_TOO_DEEP",
     "UNSUPPORTED_MAP_KEY",
-    "UNSUPPORTED_TYPE"
+    "UNSUPPORTED_TYPE",
+    "ENUM_VALUE_UNKNOWN"
   ],
   "cases": [
     {
@@ -34,7 +35,7 @@
       "direction": "roundtrip",
       "message_file": "cases/scalars_defaults.message.json",
       "document_file": "cases/scalars_defaults.document.json",
-      "note": "Every field at its default. Implicit presence means all of them are omitted, so the document is empty (§6)."
+      "note": "Every field at its default. Implicit presence means all of them are omitted, so the document is empty (\u00a76)."
     },
     {
       "name": "doubles_special",
@@ -50,7 +51,7 @@
       "direction": "decode",
       "message_file": "cases/double_from_integer.message.json",
       "document_file": "cases/double_from_integer.document.json",
-      "note": "A double or float field must decode from a Firestore Integer, not only from a Double. Nothing in the schema makes this optional: the JavaScript SDK stores an integral double as an integer (§8), so a document written by one language must stay readable by another. Decode-only -- re-encoding yields a Double, which is correct."
+      "note": "A double or float field must decode from a Firestore Integer, not only from a Double. Nothing in the schema makes this optional: the JavaScript SDK stores an integral double as an integer (\u00a78), so a document written by one language must stay readable by another. Decode-only -- re-encoding yields a Double, which is correct."
     },
     {
       "name": "enums",
@@ -65,7 +66,7 @@
       "message": "codebinge.firestore.codec.testdata.v1.Enums",
       "direction": "decode",
       "document_file": "cases/enum_unknown_name.document.json",
-      "note": "A name written by a newer writer must decode to the zero value rather than throw (§4). Decode-only: re-encoding the zero value would omit the field.",
+      "note": "A name written by a newer writer must decode to the zero value rather than throw (\u00a74). Decode-only: re-encoding the zero value would omit the field.",
       "message_file": "cases/enum_unknown_name.message.json"
     },
     {
@@ -90,7 +91,7 @@
       "direction": "roundtrip",
       "message_file": "cases/unsigned_boundaries.message.json",
       "document_file": "cases/unsigned_boundaries.document.json",
-      "note": "The four boundary values. 2^63 is the one that separates a correct implementation from one that formatted a signed long: it reads back negative in Dart and Java. `zero` and `always` are left out of the input rather than written as \"0\": an implicit-presence field assigned its default is indistinguishable from an unset one in proto3, and runtimes disagree about whether it serializes, so spelling it out would make this vector language-specific. Both are still 0. `zero` is omitted from the document by §6; `always` carries omit_when_default:false and so is written as \"0\"."
+      "note": "The four boundary values. 2^63 is the one that separates a correct implementation from one that formatted a signed long: it reads back negative in Dart and Java. `zero` and `always` are left out of the input rather than written as \"0\": an implicit-presence field assigned its default is indistinguishable from an unset one in proto3, and runtimes disagree about whether it serializes, so spelling it out would make this vector language-specific. Both are still 0. `zero` is omitted from the document by \u00a76; `always` carries omit_when_default:false and so is written as \"0\"."
     },
     {
       "name": "unsigned_leading_zeros",
@@ -138,7 +139,7 @@
       "direction": "roundtrip",
       "message_file": "cases/wellknown.message.json",
       "document_file": "cases/wellknown.document.json",
-      "note": "The timestamp carries sub-microsecond nanos on purpose. The CODEC is exact and must round-trip all nine digits; Firestore itself truncates to microseconds on write, which is a property of the database, not of this encoding (§3.1)."
+      "note": "The timestamp carries sub-microsecond nanos on purpose. The CODEC is exact and must round-trip all nine digits; Firestore itself truncates to microseconds on write, which is a property of the database, not of this encoding (\u00a73.1)."
     },
     {
       "name": "latlng_out_of_range",
@@ -146,7 +147,7 @@
       "direction": "encode",
       "message_file": "cases/latlng_out_of_range.message.json",
       "expect_error": "LATLNG_OUT_OF_RANGE",
-      "note": "Latitude beyond +90. Validated here so the failure names the field, rather than surfacing later as an opaque Firestore write rejection (§3.3)."
+      "note": "Latitude beyond +90. Validated here so the failure names the field, rather than surfacing later as an opaque Firestore write rejection (\u00a73.3)."
     },
     {
       "name": "composite_full",
@@ -162,7 +163,7 @@
       "direction": "roundtrip",
       "message_file": "cases/composite_empty.message.json",
       "document_file": "cases/composite_empty.document.json",
-      "note": "Empty repeated fields and empty maps are omitted, not written as [] or {} (§6). Contrast with presence_set, where an empty *message* is written."
+      "note": "Empty repeated fields and empty maps are omitted, not written as [] or {} (\u00a76). Contrast with presence_set, where an empty *message* is written."
     },
     {
       "name": "options_skip_and_rename",
@@ -186,28 +187,80 @@
       "direction": "encode",
       "message_file": "cases/nesting_depth_21.message.json",
       "expect_error": "NESTING_TOO_DEEP",
-      "note": "One level past the limit. The codec must reject this rather than let Firestore refuse the write (§5)."
+      "note": "One level past the limit. The codec must reject this rather than let Firestore refuse the write (\u00a75)."
     },
     {
       "name": "schema_int_key_map",
       "message": "codebinge.firestore.codec.testdata.v1.IntKeyMap",
       "direction": "schema",
       "expect_error": "UNSUPPORTED_MAP_KEY",
-      "note": "map<int32, string> must be rejected, not stringified (§5)."
+      "note": "map<int32, string> must be rejected, not stringified (\u00a75)."
     },
     {
       "name": "schema_any_field",
       "message": "codebinge.firestore.codec.testdata.v1.AnyField",
       "direction": "schema",
       "expect_error": "UNSUPPORTED_TYPE",
-      "note": "google.protobuf.Any is not supported (§3.4)."
+      "note": "google.protobuf.Any is not supported (\u00a73.4)."
     },
     {
       "name": "schema_struct_field",
       "message": "codebinge.firestore.codec.testdata.v1.StructField",
       "direction": "schema",
       "expect_error": "UNSUPPORTED_TYPE",
-      "note": "google.protobuf.Struct is not supported (§3.4)."
+      "note": "google.protobuf.Struct is not supported (\u00a73.4)."
+    },
+    {
+      "name": "duration_negative",
+      "message": "codebinge.firestore.codec.testdata.v1.WellKnown",
+      "direction": "roundtrip",
+      "message_file": "cases/duration_negative.message.json",
+      "document_file": "cases/duration_negative.document.json",
+      "note": "A negative Duration. seconds and nanos share a sign in protobuf, so -1.5s is seconds=-1, nanos=-500000000. Decoding must split the microsecond count with truncating division and a sign-preserving remainder: a Euclidean modulo yields seconds=-1, nanos=+500000000, which is -0.5s. A negative duration under one second (seconds 0, nanos negative) exercises the same split and is worth a language-local test, but is not a portable vector: Dart's proto3 JSON parser drops the sign when the integer part is zero."
+    },
+    {
+      "name": "oneof_set_default",
+      "message": "codebinge.firestore.codec.testdata.v1.Choice",
+      "direction": "roundtrip",
+      "message_file": "cases/oneof_set_default.message.json",
+      "document_file": "cases/oneof_set_default.document.json",
+      "note": "A oneof member set to its default value. Oneof members have explicit presence (\u00a76), so the zero is written, and it must decode back into the oneof: a decoder that assigns the member as a plain property loses the field entirely on runtimes that model oneofs as a tagged union."
+    },
+    {
+      "name": "oneof_set_message",
+      "message": "codebinge.firestore.codec.testdata.v1.Choice",
+      "direction": "roundtrip",
+      "message_file": "cases/oneof_set_message.message.json",
+      "document_file": "cases/oneof_set_message.document.json",
+      "note": "A message-typed oneof member, taking the nested-map path through the oneof."
+    },
+    {
+      "name": "int64_jstype_string",
+      "message": "codebinge.firestore.codec.testdata.v1.StringifiedInt64",
+      "direction": "roundtrip",
+      "message_file": "cases/int64_jstype_string.message.json",
+      "document_file": "cases/int64_jstype_string.document.json",
+      "note": "int64 fields annotated jstype = JS_STRING are still Firestore Integers. protobuf-es generates them as JavaScript strings, and an implementation that passes the value through writes a Firestore String, splitting the field's type across languages (\u00a72.1). The value is 2^53+1, beyond what a JavaScript number can hold exactly."
+    },
+    {
+      "name": "int64_jstype_string_default",
+      "message": "codebinge.firestore.codec.testdata.v1.StringifiedInt64",
+      "direction": "encode",
+      "message_file": "cases/int64_jstype_string_default.message.json",
+      "document_file": "cases/int64_jstype_string_default.document.json",
+      "note": "The default of a JS_STRING int64 is the string \"0\", which must still count as the default and be omitted (\u00a76). Encode-only: an implicit-presence field assigned its default is indistinguishable from an unset one in proto3, and runtimes disagree about whether it serializes, so the decode comparison would be language-specific (see unsigned_boundaries)."
+    },
+    {
+      "name": "enum_unknown_number",
+      "message": "codebinge.firestore.codec.testdata.v1.Enums",
+      "direction": "encode",
+      "message_file": "cases/enum_unknown_number.message.json",
+      "expect_error": "ENUM_VALUE_UNKNOWN",
+      "requires": "open_enum_values",
+      "note": "An enum number with no declared name, as relayed from a newer writer, has no representation under the name encoding (\u00a74). Writing the raw integer would mix types on a String field; writing a synthetic name would decode to zero and destroy the newer writer's value. Both are silent, so the codec throws. Under enum_as: NUMBER the integer is representable and is written."
     }
-  ]
+  ],
+  "requirements": {
+    "open_enum_values": "the runtime can hold an enum number that is not declared in the schema (Java, protobuf-es). A runtime with closed enums (Dart) cannot construct the input and may skip the case; it is conformant by construction."
+  }
 }

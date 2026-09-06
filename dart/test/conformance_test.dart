@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firestore_proto_codec/firestore_proto_codec.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/protobuf.dart';
+import 'package:protobuf/well_known_types/google/protobuf/duration.pb.dart'
+    as wkt;
 import 'package:test/test.dart';
 
 import 'generated/invalid.pb.dart' as inv;
@@ -23,6 +26,8 @@ final _factories = <String, GeneratedMessage Function()>{
   '${_pkg}Composite': td.Composite.new,
   '${_pkg}Options': td.Options.new,
   '${_pkg}Recursive': td.Recursive.new,
+  '${_pkg}Choice': td.Choice.new,
+  '${_pkg}StringifiedInt64': td.StringifiedInt64.new,
   '${_pkg}IntKeyMap': inv.IntKeyMap.new,
   '${_pkg}AnyField': inv.AnyField.new,
   '${_pkg}StructField': inv.StructField.new,
@@ -57,6 +62,22 @@ void main() {
     return message;
   }
 
+  // Not a shared vector: Dart's proto3 JSON parser drops the sign of a
+  // Duration whose integer part is zero ("-0.5s" parses as +0.5s), so the input
+  // cannot be written down portably. Built by hand instead. This is the case
+  // where a Euclidean modulo decoded -250us as +0.99975s.
+  test('negative sub-second Duration round-trips', () {
+    final message = td.WellKnown()
+      ..duration = (wkt.Duration()
+        ..seconds = Int64.ZERO
+        ..nanos = -250000);
+    final document = codec.encode(message);
+    expect(document, equals({'duration': -250}));
+    final decoded = codec.decode(document, td.WellKnown());
+    expect(decoded.duration.seconds, equals(Int64.ZERO));
+    expect(decoded.duration.nanos, equals(-250000));
+  });
+
   group('conformance', () {
     for (final entry in (manifest['cases']! as List<Object?>)) {
       final c = entry! as Map<String, Object?>;
@@ -66,8 +87,17 @@ void main() {
       final expectError = c['expect_error'] as String?;
       final messageFile = c['message_file'] as String?;
       final documentFile = c['document_file'] as String?;
+      final requires = c['requires'] as String?;
 
       test('$name ($direction)', () {
+        if (requires == 'open_enum_values') {
+          // Dart enums are closed: the runtime cannot hold an undeclared
+          // number, so this input cannot be constructed and the codec is
+          // conformant by construction (see manifest.requirements).
+          markTestSkipped('requires $requires');
+          return;
+        }
+
         Matcher throwsCode(String code) => throwsA(
               isA<CodecError>()
                   .having((e) => e.code.wireName, 'code', code),

@@ -1,7 +1,7 @@
 # @codebinge/firestore-proto-codec
 
 TypeScript implementation of the [encoding spec](../docs/encoding.md). Passes all
-23 [conformance vectors](../testdata/).
+30 [conformance vectors](../testdata/).
 
 ```ts
 const codec = new FirestoreProtoCodec();
@@ -26,6 +26,10 @@ precision above 2^53 — and `int64` fields are exactly the ones that exceed it.
 The codec emits `bigint` for signed 64-bit fields and expects `bigint` back.
 
 Unsigned fields are unaffected: they encode as strings and never touch `number`.
+
+Fields annotated `[jstype = JS_STRING]`, which protobuf-es generates as
+`string`, are coerced through `BigInt` and stored as Integers like every other
+int64; decoding hands them back as strings.
 
 ## Binding to an SDK
 

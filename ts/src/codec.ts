@@ -160,7 +160,9 @@ export class FirestoreProtoCodec {
           fieldPath,
         );
       } else {
-        if (rules.omitWhenDefault && isDefault(value)) continue;
+        if (rules.omitWhenDefault && isDefault(normalize64(field.scalar, value))) {
+          continue;
+        }
         out[name] = this.encodeElement(
           field.scalar,
           field.enum,
@@ -191,8 +193,21 @@ export class FirestoreProtoCodec {
       const number = value as number;
       if (rules.enumAsNumber) return number;
       const match = enumDesc.values.find((v) => v.number === number);
-      return match?.name ?? number;
+      if (match === undefined) {
+        // A number with no declared name, relayed from a newer writer. Writing
+        // the integer would mix types on a String field; writing a synthetic
+        // name would decode to zero. Both are silent, so refuse (§4).
+        throw new CodecError(
+          "ENUM_VALUE_UNKNOWN",
+          `${enumDesc.typeName} has no name for value ${number}`,
+          path,
+        );
+      }
+      return match.name;
     }
+    // A field annotated `jstype = JS_STRING` holds its int64 as a string;
+    // the Firestore type is still Integer (§8).
+    value = normalize64(scalar, value);
     switch (scalar) {
       case ScalarType.STRING:
       case ScalarType.BOOL:
@@ -289,25 +304,31 @@ export class FirestoreProtoCodec {
         message[field.localName] = Object.fromEntries(
           Object.entries(raw as Record<string, unknown>).map(([k, v]) => [
             k,
-            this.decodeElement(
-              field.scalar,
-              field.enum,
-              field.message,
-              v,
-              DEFAULT_RULES,
-              `${fieldPath}.${k}`,
+            toDeclared(
+              field,
+              this.decodeElement(
+                field.scalar,
+                field.enum,
+                field.message,
+                v,
+                DEFAULT_RULES,
+                `${fieldPath}.${k}`,
+              ),
             ),
           ]),
         );
       } else if (field.fieldKind === "list") {
         message[field.localName] = (raw as unknown[]).map((item, i) =>
-          this.decodeElement(
-            field.scalar,
-            field.enum,
-            field.message,
-            item,
-            rules,
-            `${fieldPath}[${i}]`,
+          toDeclared(
+            field,
+            this.decodeElement(
+              field.scalar,
+              field.enum,
+              field.message,
+              item,
+              rules,
+              `${fieldPath}[${i}]`,
+            ),
           ),
         );
       } else {
@@ -322,7 +343,7 @@ export class FirestoreProtoCodec {
         // Leaving an implicit field at its default keeps a decoded message
         // equal to one that never had it set.
         if (!isExplicit(field) && isDefault(decoded)) continue;
-        message[field.localName] = decoded;
+        writeField(message, field, toDeclared(field, decoded));
       }
     }
     return message;
@@ -476,6 +497,38 @@ export class FirestoreProtoCodec {
       return;
     }
     this.validate(schema, seen, path);
+  }
+}
+
+const is64 = (scalar: ScalarType | undefined): boolean =>
+  scalar === ScalarType.INT64 ||
+  scalar === ScalarType.SINT64 ||
+  scalar === ScalarType.SFIXED64 ||
+  scalar === ScalarType.UINT64 ||
+  scalar === ScalarType.FIXED64;
+
+/** protobuf-es holds a `jstype = JS_STRING` 64-bit field as a decimal string.
+ * The encoding is defined on the integer, so coerce before doing anything. */
+function normalize64(scalar: ScalarType | undefined, value: unknown): unknown {
+  return is64(scalar) && typeof value === "string" ? BigInt(value) : value;
+}
+
+/** The inverse: hand a decoded 64-bit value back in the type the generated
+ * code declares, so the message compares and serializes like a native one. */
+function toDeclared(field: DescField, value: unknown): unknown {
+  // longAsString is only declared on the scalar-valued DescField variants.
+  const asString = (field as { longAsString?: boolean }).longAsString === true;
+  return asString && typeof value === "bigint" ? value.toString() : value;
+}
+
+/** protobuf-es models a oneof as one tagged `{ case, value }` property named
+ * after the oneof; the member has no property of its own. Assigning the member
+ * name directly leaves the oneof unset and the value invisible. */
+function writeField(message: AnyMessage, field: DescField, value: unknown): void {
+  if (field.oneof !== undefined) {
+    message[field.oneof.localName] = { case: field.localName, value };
+  } else {
+    message[field.localName] = value;
   }
 }
 

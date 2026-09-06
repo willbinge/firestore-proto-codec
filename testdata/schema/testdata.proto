@@ -116,6 +116,25 @@ message Options {
   }];
 }
 
+// Oneof members carry explicit presence (§6): the selected member is written
+// even when it holds its default, and it must decode back into the oneof rather
+// than into a stray property.
+message Choice {
+  oneof kind {
+    string text = 1;
+    int32 number = 2;
+    Inner inner = 3;
+  }
+}
+
+// `jstype = JS_STRING` changes only the in-memory JavaScript type of an int64
+// field; the Firestore type is still Integer (§8). Dart and Java ignore the
+// option entirely.
+message StringifiedInt64 {
+  int64 id = 1 [jstype = JS_STRING];
+  repeated int64 ids = 2 [jstype = JS_STRING];
+}
+
 // Nesting depth (§5). A chain of N `child` values puts the innermost map at
 // depth N; Firestore's limit is 20.
 message Recursive {

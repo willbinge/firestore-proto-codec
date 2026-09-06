@@ -207,7 +207,19 @@ public final class FirestoreProtoCodec {
         return encodeUnsigned((Long) value, rules, path);
       case ENUM: {
         EnumValueDescriptor enumValue = (EnumValueDescriptor) value;
-        return rules.enumAsNumber() ? (long) enumValue.getNumber() : enumValue.getName();
+        if (rules.enumAsNumber()) {
+          return (long) enumValue.getNumber();
+        }
+        if (fd.getEnumType().findValueByNumber(enumValue.getNumber()) == null) {
+          // A number with no declared name, relayed from a newer writer. Its
+          // synthetic UNKNOWN_ENUM_VALUE_* name would decode to zero everywhere,
+          // silently destroying the value, so refuse (§4).
+          throw new CodecError(
+              CodecErrorCode.ENUM_VALUE_UNKNOWN,
+              fd.getEnumType().getFullName() + " has no name for value " + enumValue.getNumber(),
+              path);
+        }
+        return enumValue.getName();
       }
       case MESSAGE:
       case GROUP:

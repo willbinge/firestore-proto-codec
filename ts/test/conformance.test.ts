@@ -20,6 +20,8 @@ import {
   PresenceSchema,
   RecursiveSchema,
   ScalarsSchema,
+  ChoiceSchema,
+  StringifiedInt64Schema,
   UnsignedSchema,
   WellKnownSchema,
 } from "./generated/testdata_pb.js";
@@ -36,6 +38,8 @@ const schemas: DescMessage[] = [
   CompositeSchema,
   OptionsSchema,
   RecursiveSchema,
+  ChoiceSchema,
+  StringifiedInt64Schema,
   IntKeyMapSchema,
   AnyFieldSchema,
   StructFieldSchema,

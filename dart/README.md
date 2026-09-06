@@ -1,7 +1,9 @@
 # firestore_proto_codec (Dart)
 
-Dart implementation of the [encoding spec](../docs/encoding.md). Passes all 23
-[conformance vectors](../testdata/).
+Dart implementation of the [encoding spec](../docs/encoding.md). Passes all 30
+[conformance vectors](../testdata/) (one is skipped: Dart's closed enums cannot
+construct the input for `enum_unknown_number`, so it is conformant by
+construction).
 
 ```dart
 final codec = FirestoreProtoCodec();
