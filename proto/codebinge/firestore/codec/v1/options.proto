@@ -11,10 +11,13 @@ option java_multiple_files = true;
 
 // Per-field encoding options. See docs/encoding.md §7.
 //
-// NOTE: extension number 50000 is from protobuf's organization-internal range
-// (50000-99999), which is only safe while this file is not published. It must be
-// replaced with a number from the Global Extension Registry before any public
-// release, and changing it later is a breaking change. See docs/encoding.md §7.
+// NOTE: extension number 50000 is provisional. 50000-99999 is protobuf's
+// organization-internal range -- shared scratch space every organization is told
+// to use freely -- so a collision there is documented behavior, not bad luck,
+// and it surfaces as soon as two published schemas meet in one descriptor pool.
+// protocolbuffers/protobuf#29013 reports exactly that failure. Replace this with
+// a Global Extension Registry number before any public release: changing it
+// afterwards is breaking, and it is baked into generated identifiers too.
 extend google.protobuf.FieldOptions {
   Field field = 50000;
 }

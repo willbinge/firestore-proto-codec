@@ -365,17 +365,29 @@ enum EnumEncoding { ENUM_ENCODING_NAME = 0; ENUM_ENCODING_NUMBER = 1; }
 ```
 
 > ⚠️ **The extension number is provisional.** 50000–99999 is protobuf's
-> *organization-internal* range, which is safe only while nothing outside this
-> org imports the file. That assumption holds while this repo is private and
-> breaks the moment the library is published: two libraries both claiming 50000
-> collide in any project that imports both.
+> *organization-internal* range — shared scratch space that every organization is
+> told to use freely for in-house schemas. A collision there is the documented
+> behavior of the range rather than bad luck; it stays invisible only while
+> nothing outside this org imports the file, which is true today and stops being
+> true on publication. This file is meant to be imported — consumers annotate
+> their own schemas with it — so it lands squarely in the exposed position.
+>
+> The failure is observed, not theoretical. Flyte hit it with a field option
+> parked in the private range and
+> [documented it when requesting a registered block](https://github.com/protocolbuffers/protobuf/pull/29013):
+> another published extension claimed the same tag on
+> `google.protobuf.FieldOptions`, and the clash broke extension registration at
+> import time for every project importing both schemas.
 >
 > Before any public release, the extension must be registered in protobuf's
 > [Global Extension Registry](https://github.com/protocolbuffers/protobuf/blob/main/docs/options.md)
-> and this number replaced with the assigned one. **Changing it afterwards is
-> breaking** — every `.proto` using the option must be regenerated, and a consumer
-> pinned to the old number silently stops seeing the annotation rather than
-> failing loudly. Register before v1.0.
+> and this number replaced with the assigned one. Assignments run contiguously
+> from 1000, so the replacement is a four-digit number rather than a neighbor of
+> 50000, and protoc bakes it into the generated identifier (`field_50000` in
+> Dart) — the swap touches hand-written call sites, not only the `.proto`.
+> **Changing it after release is breaking** — every `.proto` using the option must
+> be regenerated, and a consumer pinned to the old number silently stops seeing
+> the annotation rather than failing loudly. Register before v1.0.
 
 `KIND_GEO_POINT` is only for a project's own lat/lng message
 ([§3.3](#33-googletypelatlng--firestore-geopoint)); `google.type.LatLng` needs no
