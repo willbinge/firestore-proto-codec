@@ -1,9 +1,11 @@
 # firestore_proto_codec (Dart)
 
-Dart implementation of the [encoding spec](../docs/encoding.md). Passes all 37
-[conformance vectors](../testdata/) (one is skipped: Dart's closed enums cannot
-construct the input for `enum_unknown_number`, so it is conformant by
-construction).
+Dart implementation of the
+[encoding spec](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md).
+Passes all 37
+[conformance vectors](https://github.com/willbinge/firestore-proto-codec/tree/main/testdata)
+(one is skipped: Dart's closed enums cannot construct the input for
+`enum_unknown_number`, so it is conformant by construction).
 
 ```dart
 final codec = FirestoreProtoCodec();
@@ -14,7 +16,7 @@ final task = codec.decode(snapshot.data()!, Task());  // and back
 ```
 
 `encode` returns a `Map<String, Object?>` of plain Dart values — `String`,
-`int`, `double`, `bool`, `List`, `Map` — plus whatever the [`FirestoreTypes`]
+`int`, `double`, `bool`, `List`, `Map` — plus whatever the `FirestoreTypes`
 adapter produces for the three types protobuf cannot express.
 
 ## Binding to an SDK
@@ -91,8 +93,8 @@ unregistered: the generated code records them on `BuilderInfo`, and the
   options by it, so stripped names would silently encode all three as plain
   maps. The codec throws a `StateError` instead.
 - `DocumentReference` is not modelled at all
-  ([§7](../docs/encoding.md#7-options)) — store document paths in plain `string`
-  fields.
+  ([§7](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md#7-options))
+  — store document paths in plain `string` fields.
 
 ## Development
 
