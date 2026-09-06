@@ -190,10 +190,35 @@ Validating here turns that into a precise failure.
 
 > **`LatLng` is a *common* type, not a well-known type.** It is not shipped with
 > `protoc` or bundled into language runtimes the way `google/protobuf/*` is, so it
-> has to be sourced explicitly: `proto-google-common-protos` for Java,
-> `googleapis-common-protos` for Python, a vendored `google/type/latlng.proto` for
-> Dart and TypeScript. Vendoring is **correct** here, unlike for well-known types
-> — there is no runtime-shipped copy for it to collide with.
+> has to be sourced explicitly. Two separate things get called "vendoring" here,
+> and only one of them is ever a hazard:
+>
+> 1. **Vendoring the `.proto`** — copying `google/type/latlng.proto` into the tree
+>    so `protoc -I` resolves the import while compiling a schema that uses it.
+>    Always safe: it generates no code and registers no descriptor.
+> 2. **Generating from it** — passing it to `--dart_out`, `--es_out`, `--java_out`.
+>    This produces a *second* artifact claiming the descriptor path
+>    `google/type/latlng.proto` and the message name `google.type.LatLng`.
+>
+> Everyone needs (1). Only a language with no packaged generated code needs (2):
+> **Dart and TypeScript**, where generating is correct and collides with nothing.
+> **Java, Python and Go** already ship it — `proto-google-common-protos`,
+> `googleapis-common-protos`, `google.golang.org/genproto` — so take the generated
+> code from the dependency and do not generate. A second copy is not a build
+> error in Java: the classloader picks one `com.google.type.LatLng` by classpath
+> order, and a shape mismatch then surfaces as a class-load failure far from the
+> cause. Python's descriptor pool is strict and fails outright on the duplicate
+> file name; Go's registry panics at `init`.
+>
+> None of this reaches the codec, which matches `LatLng` by descriptor full name
+> and reads `latitude`/`longitude` reflectively. It never links against a
+> generated class and works against whichever copy it is handed — the hazard is
+> in a consumer's build, not in this library's.
+>
+> *(`java/tool/generate.sh` does generate `latlng.proto`, for the conformance
+> fixtures only, to avoid pinning `proto-google-common-protos` against the
+> protobuf runtime. It is test-scoped and never ships in the jar; it is not the
+> pattern a consumer should copy.)*
 
 **Presence matters more than usual here.** `(0, 0)` is a real coordinate in the
 Gulf of Guinea, and it is also the all-defaults `LatLng`. Because singular message

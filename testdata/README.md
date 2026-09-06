@@ -36,6 +36,30 @@ protoc -I proto -I testdata/schema \
 unsupported constructs at load time would otherwise fail to load the valid
 schema alongside them.
 
+### `google.type.LatLng`
+
+`testdata.proto` imports `google/type/latlng.proto`. The command above resolves
+it from `-I proto` as an **include only** — it is not in the output list, so no
+code is generated for it. Whether an implementation additionally needs generated
+code for `LatLng` depends on the language, and getting this wrong is the one
+place these fixtures can break a host project:
+
+- **Dart, TypeScript** — nothing packages it, so generate it alongside the
+  schemas. That is what `dart/tool/generate.sh` and `ts/tool/generate.sh` do, and
+  it collides with nothing.
+- **Java, Python, Go** — a package already ships generated code
+  (`proto-google-common-protos`, `googleapis-common-protos`,
+  `google.golang.org/genproto`). Import it from there. Generating a second copy
+  shadows the packaged one by classpath order in Java, panics at `init` in Go,
+  and in Python raises `TypeError: duplicate file name google/type/latlng.proto`
+  at import — and `googleapis-common-protos` arrives transitively with
+  `google-cloud-firestore`, so that collision is likely rather than
+  hypothetical.
+
+`java/tool/generate.sh` is the deliberate exception: it generates `LatLng` for
+these fixtures to avoid pinning `proto-google-common-protos` against the
+protobuf runtime, test-scoped and never shipped (§3.3).
+
 ## File formats, and two things that look like contradictions
 
 **Input (`*.message.json`) is proto3 JSON.** Not text format. Text format has no
