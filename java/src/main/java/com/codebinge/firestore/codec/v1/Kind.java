@@ -21,33 +21,24 @@ public enum Kind
   KIND_UNSPECIFIED(0),
   /**
    * <pre>
-   * string -&gt; DocumentReference. Requires the codec to hold a Firestore
-   * instance; the one place this codec is not dependency-free.
-   * </pre>
-   *
-   * <code>KIND_REFERENCE = 1;</code>
-   */
-  KIND_REFERENCE(1),
-  /**
-   * <pre>
    * A project's own lat/lng message -&gt; GeoPoint (§3.3). Not needed for
    * google.type.LatLng, which is recognized automatically. The annotated
    * message must have exactly two double fields named `latitude` and
    * `longitude`.
    * </pre>
    *
-   * <code>KIND_GEO_POINT = 2;</code>
+   * <code>KIND_GEO_POINT = 1;</code>
    */
-  KIND_GEO_POINT(2),
+  KIND_GEO_POINT(1),
   /**
    * <pre>
    * uint64/fixed64 -&gt; Integer rather than String, keeping the field ordered
    * and queryable. Throws at encode time above 2^63-1 (§2.1).
    * </pre>
    *
-   * <code>KIND_UNSIGNED_AS_INTEGER = 3;</code>
+   * <code>KIND_UNSIGNED_AS_INTEGER = 2;</code>
    */
-  KIND_UNSIGNED_AS_INTEGER(3),
+  KIND_UNSIGNED_AS_INTEGER(2),
   UNRECOGNIZED(-1),
   ;
 
@@ -70,33 +61,24 @@ public enum Kind
   public static final int KIND_UNSPECIFIED_VALUE = 0;
   /**
    * <pre>
-   * string -&gt; DocumentReference. Requires the codec to hold a Firestore
-   * instance; the one place this codec is not dependency-free.
-   * </pre>
-   *
-   * <code>KIND_REFERENCE = 1;</code>
-   */
-  public static final int KIND_REFERENCE_VALUE = 1;
-  /**
-   * <pre>
    * A project's own lat/lng message -&gt; GeoPoint (§3.3). Not needed for
    * google.type.LatLng, which is recognized automatically. The annotated
    * message must have exactly two double fields named `latitude` and
    * `longitude`.
    * </pre>
    *
-   * <code>KIND_GEO_POINT = 2;</code>
+   * <code>KIND_GEO_POINT = 1;</code>
    */
-  public static final int KIND_GEO_POINT_VALUE = 2;
+  public static final int KIND_GEO_POINT_VALUE = 1;
   /**
    * <pre>
    * uint64/fixed64 -&gt; Integer rather than String, keeping the field ordered
    * and queryable. Throws at encode time above 2^63-1 (§2.1).
    * </pre>
    *
-   * <code>KIND_UNSIGNED_AS_INTEGER = 3;</code>
+   * <code>KIND_UNSIGNED_AS_INTEGER = 2;</code>
    */
-  public static final int KIND_UNSIGNED_AS_INTEGER_VALUE = 3;
+  public static final int KIND_UNSIGNED_AS_INTEGER_VALUE = 2;
 
 
   public final int getNumber() {
@@ -124,9 +106,8 @@ public enum Kind
   public static Kind forNumber(int value) {
     switch (value) {
       case 0: return KIND_UNSPECIFIED;
-      case 1: return KIND_REFERENCE;
-      case 2: return KIND_GEO_POINT;
-      case 3: return KIND_UNSIGNED_AS_INTEGER;
+      case 1: return KIND_GEO_POINT;
+      case 2: return KIND_UNSIGNED_AS_INTEGER;
       default: return null;
     }
   }

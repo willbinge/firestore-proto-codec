@@ -36,15 +36,16 @@ The default adapter emits dependency-free `FsTimestamp` / `FsBlob` /
 class AdminTypes implements FirestoreTypes {
   timestamp = (seconds: bigint, nanos: number) =>
     new Timestamp(Number(seconds), nanos);
-  blob = (bytes: Uint8Array) => Bytes.fromUint8Array(bytes);
+  blob = (bytes: Uint8Array) => Buffer.from(bytes);
   geoPoint = (lat: number, lng: number) => new GeoPoint(lat, lng);
 
   readTimestamp = (v: unknown) =>
     v instanceof Timestamp
       ? { seconds: BigInt(v.seconds), nanos: v.nanoseconds }
       : undefined;
+  // Buffer extends Uint8Array, so this covers both.
   readBlob = (v: unknown) =>
-    v instanceof Bytes ? v.toUint8Array() : undefined;
+    v instanceof Uint8Array ? new Uint8Array(v) : undefined;
   readGeoPoint = (v: unknown) =>
     v instanceof GeoPoint
       ? { latitude: v.latitude, longitude: v.longitude }
@@ -53,6 +54,10 @@ class AdminTypes implements FirestoreTypes {
 
 const codec = new FirestoreProtoCodec(new AdminTypes());
 ```
+
+Verified against `@google-cloud/firestore` 9.0.1: there is no `Bytes` class in
+the admin SDK (that one belongs to the web client SDK), and bytes values are
+plain `Buffer`s.
 
 Keeping this an interface is why the core has no Firebase dependency.
 
@@ -76,7 +81,8 @@ keeps custom options and field presence on the descriptor, so `getOption()` and
 > type, so a rule asserting `is float` will disagree across languages. There is
 > no workaround in the SDK.
 
-`KIND_REFERENCE` is not implemented; it needs a live `Firestore` instance.
+`DocumentReference` is not modelled at all ([§7](../docs/encoding.md#7-options)) --
+store document paths in plain `string` fields.
 
 ## Development
 

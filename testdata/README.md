@@ -64,9 +64,8 @@ that is written down portably.
 
 ## Deliberate gaps
 
-- **`KIND_REFERENCE`.** Encoding a `DocumentReference` requires a live
-  `Firestore` instance and a project id, which would make the vectors
-  environment-dependent. Covered by implementation tests instead.
+- **`DocumentReference`.** Not modelled by the encoding at all (§7); document
+  paths are stored as plain strings.
 - **Server sentinels.** Not part of the encoding (§7).
 - **`nullValue`.** Unreachable: proto has no null, and absent fields are omitted.
 

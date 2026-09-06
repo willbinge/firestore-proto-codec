@@ -43,6 +43,8 @@ class CloudFirestoreTypes implements FirestoreTypes {
 final codec = FirestoreProtoCodec(types: CloudFirestoreTypes());
 ```
 
+Verified against `cloud_firestore_platform_interface` 8.0.6.
+
 Keeping this an interface is why the core has no Firebase dependency and can be
 tested off-device.
 
@@ -80,7 +82,9 @@ Messages using neither need no registration.
 - **`-Dprotobuf.omit_field_names=true` breaks the encoding**, which is defined
   in terms of proto field names. The codec throws a `StateError` naming the
   field rather than writing a document with empty keys.
-- `KIND_REFERENCE` is not implemented; it needs a live `Firestore` instance.
+- `DocumentReference` is not modelled at all
+  ([§7](../docs/encoding.md#7-options)) — store document paths in plain `string`
+  fields.
 
 ## Development
 

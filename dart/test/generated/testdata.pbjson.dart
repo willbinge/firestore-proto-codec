@@ -185,7 +185,7 @@ final $typed_data.Uint8List unsignedDescriptor = $convert.base64Decode(
     'CghVbnNpZ25lZBISCgR6ZXJvGAEgASgEUgR6ZXJvEh0KCm1heF9zaWduZWQYAiABKARSCW1heF'
     'NpZ25lZBIqChFtaW5fdW5zaWduZWRfb25seRgDIAEoBFIPbWluVW5zaWduZWRPbmx5EiEKDG1h'
     'eF91bnNpZ25lZBgEIAEoBFILbWF4VW5zaWduZWQSFAoFZml4ZWQYBSABKAZSBWZpeGVkEiUKCm'
-    'FzX2ludGVnZXIYBiABKARCBoK1GAIoA1IJYXNJbnRlZ2VyEh4KBmFsd2F5cxgHIAEoBEIGgrUY'
+    'FzX2ludGVnZXIYBiABKARCBoK1GAIoAlIJYXNJbnRlZ2VyEh4KBmFsd2F5cxgHIAEoBEIGgrUY'
     'AiAAUgZhbHdheXM=');
 
 @$core.Deprecated('Use wellKnownDescriptor instead')

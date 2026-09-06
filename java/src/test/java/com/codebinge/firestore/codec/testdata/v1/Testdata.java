@@ -121,7 +121,7 @@ public final class Testdata extends com.google.protobuf.GeneratedFile {
       "\n\n_opt_int32\"\240\001\n\010Unsigned\022\014\n\004zero\030\001 \001(\004\022" +
       "\022\n\nmax_signed\030\002 \001(\004\022\031\n\021min_unsigned_only" +
       "\030\003 \001(\004\022\024\n\014max_unsigned\030\004 \001(\004\022\r\n\005fixed\030\005 " +
-      "\001(\006\022\032\n\nas_integer\030\006 \001(\004B\006\202\265\030\002(\003\022\026\n\006alway" +
+      "\001(\006\022\032\n\nas_integer\030\006 \001(\004B\006\202\265\030\002(\002\022\026\n\006alway" +
       "s\030\007 \001(\004B\006\202\265\030\002 \000\"\216\001\n\tWellKnown\022-\n\ttimesta" +
       "mp\030\001 \001(\0132\032.google.protobuf.Timestamp\022+\n\010" +
       "duration\030\002 \001(\0132\031.google.protobuf.Duratio" +

@@ -14,7 +14,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file codebinge/firestore/codec/v1/options.proto.
  */
 export const file_codebinge_firestore_codec_v1_options: GenFile = /*@__PURE__*/
-  fileDesc("Cipjb2RlYmluZ2UvZmlyZXN0b3JlL2NvZGVjL3YxL29wdGlvbnMucHJvdG8SHGNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudjEiyAEKBUZpZWxkEgwKBHNraXAYASABKAgSDAoEbmFtZRgCIAEoCRI7CgdlbnVtX2FzGAMgASgOMiouY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy52MS5FbnVtRW5jb2RpbmcSHgoRb21pdF93aGVuX2RlZmF1bHQYBCABKAhIAIgBARIwCgRraW5kGAUgASgOMiIuY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy52MS5LaW5kQhQKEl9vbWl0X3doZW5fZGVmYXVsdCpiCgRLaW5kEhQKEEtJTkRfVU5TUEVDSUZJRUQQABISCg5LSU5EX1JFRkVSRU5DRRABEhIKDktJTkRfR0VPX1BPSU5UEAISHAoYS0lORF9VTlNJR05FRF9BU19JTlRFR0VSEAMqQAoMRW51bUVuY29kaW5nEhYKEkVOVU1fRU5DT0RJTkdfTkFNRRAAEhgKFEVOVU1fRU5DT0RJTkdfTlVNQkVSEAE6WgoFZmllbGQSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGNCGAyABKAsyIy5jb2RlYmluZ2UuZmlyZXN0b3JlLmNvZGVjLnYxLkZpZWxkUgVmaWVsZEIkCiBjb20uY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy52MVABYgZwcm90bzM", [file_google_protobuf_descriptor]);
+  fileDesc("Cipjb2RlYmluZ2UvZmlyZXN0b3JlL2NvZGVjL3YxL29wdGlvbnMucHJvdG8SHGNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudjEiyAEKBUZpZWxkEgwKBHNraXAYASABKAgSDAoEbmFtZRgCIAEoCRI7CgdlbnVtX2FzGAMgASgOMiouY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy52MS5FbnVtRW5jb2RpbmcSHgoRb21pdF93aGVuX2RlZmF1bHQYBCABKAhIAIgBARIwCgRraW5kGAUgASgOMiIuY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy52MS5LaW5kQhQKEl9vbWl0X3doZW5fZGVmYXVsdCpOCgRLaW5kEhQKEEtJTkRfVU5TUEVDSUZJRUQQABISCg5LSU5EX0dFT19QT0lOVBABEhwKGEtJTkRfVU5TSUdORURfQVNfSU5URUdFUhACKkAKDEVudW1FbmNvZGluZxIWChJFTlVNX0VOQ09ESU5HX05BTUUQABIYChRFTlVNX0VOQ09ESU5HX05VTUJFUhABOloKBWZpZWxkEh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxjQhgMgASgLMiMuY29kZWJpbmdlLmZpcmVzdG9yZS5jb2RlYy52MS5GaWVsZFIFZmllbGRCJAogY29tLmNvZGViaW5nZS5maXJlc3RvcmUuY29kZWMudjFQAWIGcHJvdG8z", [file_google_protobuf_descriptor]);
 
 /**
  * @generated from message codebinge.firestore.codec.v1.Field
@@ -81,30 +81,22 @@ export enum Kind {
   UNSPECIFIED = 0,
 
   /**
-   * string -> DocumentReference. Requires the codec to hold a Firestore
-   * instance; the one place this codec is not dependency-free.
-   *
-   * @generated from enum value: KIND_REFERENCE = 1;
-   */
-  REFERENCE = 1,
-
-  /**
    * A project's own lat/lng message -> GeoPoint (§3.3). Not needed for
    * google.type.LatLng, which is recognized automatically. The annotated
    * message must have exactly two double fields named `latitude` and
    * `longitude`.
    *
-   * @generated from enum value: KIND_GEO_POINT = 2;
+   * @generated from enum value: KIND_GEO_POINT = 1;
    */
-  GEO_POINT = 2,
+  GEO_POINT = 1,
 
   /**
    * uint64/fixed64 -> Integer rather than String, keeping the field ordered
    * and queryable. Throws at encode time above 2^63-1 (§2.1).
    *
-   * @generated from enum value: KIND_UNSIGNED_AS_INTEGER = 3;
+   * @generated from enum value: KIND_UNSIGNED_AS_INTEGER = 2;
    */
-  UNSIGNED_AS_INTEGER = 3,
+  UNSIGNED_AS_INTEGER = 2,
 }
 
 /**

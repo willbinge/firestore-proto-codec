@@ -49,6 +49,8 @@ final class CloudTypes implements FirestoreTypes {
 FirestoreProtoCodec codec = new FirestoreProtoCodec(new CloudTypes());
 ```
 
+Verified against `google-cloud-firestore` 3.44.0 and `google-cloud-core` 2.72.0.
+
 Keeping this an interface is why the core depends only on `protobuf-java`, with
 no Google Cloud jars.
 

@@ -308,9 +308,8 @@ message Field {
 
 enum Kind {
   KIND_UNSPECIFIED = 0;          // infer from proto type
-  KIND_REFERENCE = 1;            // string -> DocumentReference
-  KIND_GEO_POINT = 2;            // a local lat/lng message -> GeoPoint (§3.3)
-  KIND_UNSIGNED_AS_INTEGER = 3;  // uint64/fixed64 -> Integer; throws above 2^63−1
+  KIND_GEO_POINT = 1;            // a local lat/lng message -> GeoPoint (§3.3)
+  KIND_UNSIGNED_AS_INTEGER = 2;  // uint64/fixed64 -> Integer; throws above 2^63−1
 }
 
 enum EnumEncoding { ENUM_ENCODING_NAME = 0; ENUM_ENCODING_NUMBER = 1; }
@@ -333,12 +332,13 @@ enum EnumEncoding { ENUM_ENCODING_NAME = 0; ENUM_ENCODING_NUMBER = 1; }
 ([§3.3](#33-googletypelatlng--firestore-geopoint)); `google.type.LatLng` needs no
 annotation.
 
-`KIND_REFERENCE` covers the one Firestore value type protobuf genuinely cannot
-express. `reference_value` is a document path string on the wire, but
-constructing a real `DocumentReference` requires the codec to hold a `Firestore`
-instance — the single place this codec is not dependency-free. That is reason
-enough to keep it opt-in, and a project that treats reference paths as plain
-strings never needs it at all.
+**`DocumentReference` is deliberately not modelled.** It is the one Firestore
+value type protobuf cannot express, and constructing one requires a live
+`Firestore` instance — which would make the codec dependency-bound for something
+every project can do without. Store the document path in a plain `string` field
+instead: `reference_value` is a path string on the wire anyway, and a path in a
+string field stays queryable and portable. Leaving it out is what lets the codec
+be a pure function with no SDK dependency at all.
 
 Server sentinels (`serverTimestamp`, `increment`, `arrayUnion`, `arrayRemove`)
 are **not modeled**: they are operations on a write, not properties of a value,

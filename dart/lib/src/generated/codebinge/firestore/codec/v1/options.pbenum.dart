@@ -19,32 +19,26 @@ class Kind extends $pb.ProtobufEnum {
   static const Kind KIND_UNSPECIFIED =
       Kind._(0, _omitEnumNames ? '' : 'KIND_UNSPECIFIED');
 
-  /// string -> DocumentReference. Requires the codec to hold a Firestore
-  /// instance; the one place this codec is not dependency-free.
-  static const Kind KIND_REFERENCE =
-      Kind._(1, _omitEnumNames ? '' : 'KIND_REFERENCE');
-
   /// A project's own lat/lng message -> GeoPoint (§3.3). Not needed for
   /// google.type.LatLng, which is recognized automatically. The annotated
   /// message must have exactly two double fields named `latitude` and
   /// `longitude`.
   static const Kind KIND_GEO_POINT =
-      Kind._(2, _omitEnumNames ? '' : 'KIND_GEO_POINT');
+      Kind._(1, _omitEnumNames ? '' : 'KIND_GEO_POINT');
 
   /// uint64/fixed64 -> Integer rather than String, keeping the field ordered
   /// and queryable. Throws at encode time above 2^63-1 (§2.1).
   static const Kind KIND_UNSIGNED_AS_INTEGER =
-      Kind._(3, _omitEnumNames ? '' : 'KIND_UNSIGNED_AS_INTEGER');
+      Kind._(2, _omitEnumNames ? '' : 'KIND_UNSIGNED_AS_INTEGER');
 
   static const $core.List<Kind> values = <Kind>[
     KIND_UNSPECIFIED,
-    KIND_REFERENCE,
     KIND_GEO_POINT,
     KIND_UNSIGNED_AS_INTEGER,
   ];
 
   static final $core.List<Kind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 3);
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
   static Kind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

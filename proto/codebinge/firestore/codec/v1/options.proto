@@ -46,19 +46,15 @@ enum Kind {
   // Infer from the proto type. The default for every field.
   KIND_UNSPECIFIED = 0;
 
-  // string -> DocumentReference. Requires the codec to hold a Firestore
-  // instance; the one place this codec is not dependency-free.
-  KIND_REFERENCE = 1;
-
   // A project's own lat/lng message -> GeoPoint (§3.3). Not needed for
   // google.type.LatLng, which is recognized automatically. The annotated
   // message must have exactly two double fields named `latitude` and
   // `longitude`.
-  KIND_GEO_POINT = 2;
+  KIND_GEO_POINT = 1;
 
   // uint64/fixed64 -> Integer rather than String, keeping the field ordered
   // and queryable. Throws at encode time above 2^63-1 (§2.1).
-  KIND_UNSIGNED_AS_INTEGER = 3;
+  KIND_UNSIGNED_AS_INTEGER = 2;
 }
 
 enum EnumEncoding {

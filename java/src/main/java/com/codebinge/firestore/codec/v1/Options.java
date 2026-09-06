@@ -59,15 +59,14 @@ public final class Options extends com.google.protobuf.GeneratedFile {
       "\001(\0162*.codebinge.firestore.codec.v1.EnumE" +
       "ncoding\022\036\n\021omit_when_default\030\004 \001(\010H\000\210\001\001\022" +
       "0\n\004kind\030\005 \001(\0162\".codebinge.firestore.code" +
-      "c.v1.KindB\024\n\022_omit_when_default*b\n\004Kind\022" +
-      "\024\n\020KIND_UNSPECIFIED\020\000\022\022\n\016KIND_REFERENCE\020" +
-      "\001\022\022\n\016KIND_GEO_POINT\020\002\022\034\n\030KIND_UNSIGNED_A" +
-      "S_INTEGER\020\003*@\n\014EnumEncoding\022\026\n\022ENUM_ENCO" +
-      "DING_NAME\020\000\022\030\n\024ENUM_ENCODING_NUMBER\020\001:S\n" +
-      "\005field\022\035.google.protobuf.FieldOptions\030\320\206" +
-      "\003 \001(\0132#.codebinge.firestore.codec.v1.Fie" +
-      "ldB$\n com.codebinge.firestore.codec.v1P\001" +
-      "b\006proto3"
+      "c.v1.KindB\024\n\022_omit_when_default*N\n\004Kind\022" +
+      "\024\n\020KIND_UNSPECIFIED\020\000\022\022\n\016KIND_GEO_POINT\020" +
+      "\001\022\034\n\030KIND_UNSIGNED_AS_INTEGER\020\002*@\n\014EnumE" +
+      "ncoding\022\026\n\022ENUM_ENCODING_NAME\020\000\022\030\n\024ENUM_" +
+      "ENCODING_NUMBER\020\001:S\n\005field\022\035.google.prot" +
+      "obuf.FieldOptions\030\320\206\003 \001(\0132#.codebinge.fi" +
+      "restore.codec.v1.FieldB$\n com.codebinge." +
+      "firestore.codec.v1P\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

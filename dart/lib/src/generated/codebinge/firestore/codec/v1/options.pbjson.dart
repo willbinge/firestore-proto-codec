@@ -20,16 +20,15 @@ const Kind$json = {
   '1': 'Kind',
   '2': [
     {'1': 'KIND_UNSPECIFIED', '2': 0},
-    {'1': 'KIND_REFERENCE', '2': 1},
-    {'1': 'KIND_GEO_POINT', '2': 2},
-    {'1': 'KIND_UNSIGNED_AS_INTEGER', '2': 3},
+    {'1': 'KIND_GEO_POINT', '2': 1},
+    {'1': 'KIND_UNSIGNED_AS_INTEGER', '2': 2},
   ],
 };
 
 /// Descriptor for `Kind`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List kindDescriptor = $convert.base64Decode(
-    'CgRLaW5kEhQKEEtJTkRfVU5TUEVDSUZJRUQQABISCg5LSU5EX1JFRkVSRU5DRRABEhIKDktJTk'
-    'RfR0VPX1BPSU5UEAISHAoYS0lORF9VTlNJR05FRF9BU19JTlRFR0VSEAM=');
+    'CgRLaW5kEhQKEEtJTkRfVU5TUEVDSUZJRUQQABISCg5LSU5EX0dFT19QT0lOVBABEhwKGEtJTk'
+    'RfVU5TSUdORURfQVNfSU5URUdFUhAC');
 
 @$core.Deprecated('Use enumEncodingDescriptor instead')
 const EnumEncoding$json = {
