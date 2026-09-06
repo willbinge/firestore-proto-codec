@@ -260,6 +260,12 @@ reject the write.
 empty bytes, and the zero-valued enum are not written. Empty repeated fields and
 empty maps are omitted, not written as `[]` or `{}`.
 
+The comparison for floating-point fields is **numeric**, so `-0.0` counts as the
+default and is omitted. Java is where this bites: `Double.equals` compares bits,
+so the obvious `Objects.equals(value, field.getDefaultValue())` keeps `-0.0` and
+diverges from the other runtimes. A field with explicit presence is unaffected --
+there `-0.0` is written and preserved everywhere.
+
 This matches proto3's implicit-presence semantics — the decoder supplies the
 default either way — and avoids paying index entries for fields carrying nothing.
 
@@ -346,7 +352,8 @@ Where the same rules need different handling per runtime.
 |---|---|---|---|
 | proto int64 | `Int64` (`fixnum`) | `bigint` or `string` | `long` |
 | Firestore int64 | `int` (64-bit native) | **`number` — 53-bit!** | `long` |
-| unsigned → string | format/parse **as unsigned** | `bigint.toString()` | `Long.toUnsignedString` / `parseUnsignedLong` |
+| unsigned 64-bit | format/parse **as unsigned** | `bigint.toString()` | `Long.toUnsignedString` / `parseUnsignedLong` |
+| unsigned 32-bit | `int`, already positive | `number`, already positive | **signed `int`** — `Integer.toUnsignedLong` |
 | Blob | `Blob` | `Buffer` | `Blob` |
 | Timestamp | `Timestamp` | `Timestamp` | `com.google.cloud.Timestamp` |
 
@@ -388,11 +395,20 @@ unsigned `bigint`, so there is no sign to flip and `toString()` is already
 correct. The trap belongs to runtimes that reuse a signed 64-bit integer for
 unsigned values, which is Dart and Java.
 
+**Java's signed-integer hazard is not limited to 64 bits.** `uint32` and
+`fixed32` live in a signed `int`, so a value above 2^31−1 reads back negative and
+must be widened with `Integer.toUnsignedLong` before encoding — the same shape of
+bug as [§2.1](#21-unsigned-64-bit), one type smaller and easier to miss because
+the encoding rule for `uint32` is unremarkable. Dart and TypeScript are
+unaffected; both hold `uint32` in a type wide enough to keep it positive. The
+`uint32_field` in the `scalars_full` vector is `4294967295`, which catches it.
+
 **Only Dart needs a registration step.** protobuf-es keeps custom options and
 field presence on the descriptor and exposes them through `getOption()` and
 `field.presence`, so a TypeScript implementation reads [§6](#6-presence-and-defaults)
-and [§7](#7-options) straight from the schema; Java's runtime descriptors do the
-same. The registry the Dart implementation needs is a property of that runtime,
+and [§7](#7-options) straight from the schema. Java is the same: protobuf-java
+re-parses a generated file's options with its own extensions registered, so
+`getOptions().getExtension(...)` works with no setup. The registry the Dart implementation needs is a property of that runtime,
 not of this encoding.
 
 > ⚠️ **JavaScript cannot write a Firestore double holding an integral value.**

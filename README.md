@@ -2,9 +2,11 @@
 
 Encode a protobuf message as a Firestore value, and decode it back.
 
-**Status: draft specification, no implementation yet.** The encoding is defined
-in [docs/encoding.md](docs/encoding.md); conformance vectors and the first
-implementation come next.
+**Status: draft, v0.1.** The encoding is defined in
+[docs/encoding.md](docs/encoding.md) and pinned by 24 shared
+[conformance vectors](testdata/). Dart, TypeScript, and Java implementations all
+pass them. Not yet published — see the extension-number note in
+[§7](docs/encoding.md#7-options).
 
 ## What it is
 
@@ -68,12 +70,13 @@ format is a protobuf, and `google.firestore.v1.Value` declares
 |---|---|
 | [`docs/encoding.md`](docs/encoding.md) | the specification |
 | [`testdata/`](testdata/) | conformance vectors, shared by every implementation |
-| [`dart/`](dart/) | Dart implementation — passes all 23 vectors |
-| [`ts/`](ts/) | TypeScript implementation — passes all 23 vectors |
+| [`dart/`](dart/) | Dart implementation — passes all 24 vectors |
+| [`ts/`](ts/) | TypeScript implementation — passes all 24 vectors |
+| [`java/`](java/) | Java implementation — passes all 24 vectors |
 | `proto/codebinge/firestore/codec/v1/options.proto` | per-field encoding options |
 
-Java is planned. A conforming implementation in any language
-must pass the vectors described in [§9](docs/encoding.md#9-conformance).
+A conforming implementation in any language must pass the vectors described in
+[§9](docs/encoding.md#9-conformance).
 
 ---
 
