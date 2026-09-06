@@ -80,4 +80,6 @@ A conforming implementation in any language must pass the vectors described in
 
 ---
 
-Copyright 2026 Code Binge LLC. All rights reserved.
+Copyright 2026 Code Binge LLC. Licensed under the
+[Apache License, Version 2.0](LICENSE); see [NOTICE](NOTICE) for third-party
+attributions.

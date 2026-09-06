@@ -8,6 +8,18 @@
   <artifactId>firestore-proto-codec</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 
+  <name>firestore-proto-codec</name>
+  <description>Encode a protobuf message as a Firestore value, and decode it back.</description>
+  <url>https://github.com/willbinge/firestore-proto-codec</url>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

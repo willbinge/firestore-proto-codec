@@ -2,7 +2,12 @@
   "name": "@codebinge/firestore-proto-codec",
   "version": "0.1.0",
   "description": "Encode a protobuf message as a Firestore value, and decode it back.",
-  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willbinge/firestore-proto-codec.git",
+    "directory": "ts"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
