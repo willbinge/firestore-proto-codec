@@ -1,0 +1,24 @@
+{
+  "name": "@codebinge/firestore-proto-codec",
+  "version": "0.1.0",
+  "description": "Encode a protobuf message as a Firestore value, and decode it back.",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "generate": "./tool/generate.sh",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.2.0"
+  },
+  "devDependencies": {
+    "@bufbuild/protoc-gen-es": "^2.2.0",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

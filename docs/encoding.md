@@ -65,7 +65,7 @@ a breaking change to stored data.**
 | `uint32`, `fixed32` | Integer | widens safely |
 | `int64`, `sint64`, `sfixed64` | Integer | Firestore integers are int64 — exact |
 | `uint64`, `fixed64` | String | decimal, unsigned — [§2.1](#21-unsigned-64-bit) |
-| `double`, `float` | Double | NaN and ±Inf supported natively |
+| `double`, `float` | Double | NaN and ±Inf supported natively; see [§8](#8-language-notes) for a JavaScript caveat |
 | enum | String | [§4](#4-enums) |
 
 > **This table is most of the argument against `toProto3Json()`.** Proto3 JSON
@@ -372,7 +372,33 @@ the same thing before assuming reflection is enough.
 One upside falls out of the string encoding: **unsigned fields are immune to the
 JavaScript 53-bit problem.** They round-trip correctly under the default JS SDK
 configuration, because they never touch `number`. `int64` remains the type that
-requires `useBigInt`.
+requires `useBigInt` — and note that with it enabled *every* integer comes back
+as a `bigint`, including a numerically-encoded enum ([§4](#4-enums)).
+
+**TypeScript escapes the 2^63 trap entirely.** protobuf-es models `uint64` as an
+unsigned `bigint`, so there is no sign to flip and `toString()` is already
+correct. The trap belongs to runtimes that reuse a signed 64-bit integer for
+unsigned values, which is Dart and Java.
+
+**Only Dart needs a registration step.** protobuf-es keeps custom options and
+field presence on the descriptor and exposes them through `getOption()` and
+`field.presence`, so a TypeScript implementation reads [§6](#6-presence-and-defaults)
+and [§7](#7-options) straight from the schema; Java's runtime descriptors do the
+same. The registry the Dart implementation needs is a property of that runtime,
+not of this encoding.
+
+> ⚠️ **JavaScript cannot write a Firestore double holding an integral value.**
+> The Firestore JS SDK picks the stored type from the value: `Number.isSafeInteger(val)`
+> and not negative zero writes `integerValue`, anything else writes `doubleValue`.
+> JavaScript has one numeric type, so a proto `double` field holding `3.0` is
+> stored as a Firestore **integer** — where Dart and Java store a double.
+>
+> The proto round-trip still works, and Firestore orders integers and doubles
+> together by value, so queries are unaffected. What diverges is the stored type:
+> a security rule asserting `is float`, or a reader switching on the value's type,
+> will disagree across languages. There is no workaround in the SDK — the only
+> defence is not to depend on the distinction. The conformance vectors avoid
+> integral doubles for this reason.
 
 ## 9. Conformance
 

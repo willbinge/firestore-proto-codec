@@ -3,6 +3,7 @@
 .idea/
 node_modules/
 build/
+dist/
 .dart_tool/
 pubspec.lock
 target/

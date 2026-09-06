@@ -69,9 +69,10 @@ format is a protobuf, and `google.firestore.v1.Value` declares
 | [`docs/encoding.md`](docs/encoding.md) | the specification |
 | [`testdata/`](testdata/) | conformance vectors, shared by every implementation |
 | [`dart/`](dart/) | Dart implementation — passes all 23 vectors |
+| [`ts/`](ts/) | TypeScript implementation — passes all 23 vectors |
 | `proto/codebinge/firestore/codec/v1/options.proto` | per-field encoding options |
 
-TypeScript and Java are planned. A conforming implementation in any language
+Java is planned. A conforming implementation in any language
 must pass the vectors described in [§9](docs/encoding.md#9-conformance).
 
 ---
