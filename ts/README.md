@@ -29,6 +29,15 @@ The codec emits `bigint` for signed 64-bit fields and expects `bigint` back.
 
 Unsigned fields are unaffected: they encode as strings and never touch `number`.
 
+That string is a trade, not a detail. Firestore compares strings
+lexicographically, so `"9"` sorts after `"10"`: `==` and `in` on a `uint64` field
+still work, but `orderBy`, range filters, and `sum`/`average` do not
+([§2.1](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md#21-unsigned-64-bit)).
+**Declare anything you intend to order or range-query as `int64`**, which stores
+as a native Firestore Integer. Money in cents is the usual casualty — a
+`uint64 total_cents` cannot answer `where('total_cents', '>', 1000)`, and an
+`int64 total_cents` can.
+
 Fields annotated `[jstype = JS_STRING]`, which protobuf-es generates as
 `string`, are coerced through `BigInt` and stored as Integers like every other
 int64; decoding hands them back as strings.

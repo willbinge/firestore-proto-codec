@@ -39,6 +39,13 @@ schema rather than of the encoding:
 - Partial writes, merge semantics, field masks
 - Migration between shapes
 
+One consequence of merge semantics being out of scope is worth stating outright:
+**decoding drops fields the schema does not declare.** `decode` builds a typed
+message, so a field written by a newer deployment is not carried, and writing
+that message back with `set(encode(msg))` deletes it. A field-per-column
+encoding looks forward-safe, and is — but only under `update()` with a field
+mask, which is the caller's job.
+
 A codec that knows about collections is a persistence framework. This is not one.
 
 ## 1. Field naming
@@ -321,7 +328,7 @@ default either way — and avoids paying index entries for fields carrying nothi
 Fields with **explicit presence** (`optional` in proto3, and all singular message
 fields) follow the opposite rule: written when set, absent when not.
 
-Two consequences for callers:
+Three consequences for callers:
 
 - **A security rule reading these fields must use `.get(field, default)`.** A rule
   reading `data.count` rejects exactly those documents whose count is zero. This
@@ -329,9 +336,28 @@ Two consequences for callers:
   permissions bug.
 - **Clearing a field on update means `FieldValue.delete()`**, not writing a
   default — which is the caller's job, since merge semantics are out of scope.
+- **A query for a default value matches nothing.**
+  `where('redeemed', '==', false)` never matches a document whose `redeemed` is
+  false, because that document has no `redeemed` field at all. `bool` is the
+  degenerate case: two states, one of them unreachable, so half the query
+  surface disappears — for a `string` you lose one value out of infinity.
+  Declaring the field `optional` fixes it with no options at all, because
+  explicit presence makes `false` a state of its own and writes it.
 
-Per-field override: `omit_when_default: false` where an index or rule depends on
-the field existing.
+**`optional` and `omit_when_default: false` are not alternatives.** They answer
+different questions, and which one is right depends on who else reads the
+`.proto`:
+
+- `optional` says *this field is semantically nullable* — a statement about the
+  model. It changes the generated API in every language for every consumer:
+  nullable getters, `hasFoo()`, unwrapping at call sites.
+- `omit_when_default: false` ([§7](#7-options)) says *this field must exist in
+  storage so I can query it* — a statement about storage, invisible to anyone
+  not using this codec.
+
+For a proto shared with non-Firestore consumers — an RPC boundary, a client in
+another language — reach for the option. Choosing `optional` to obtain a storage
+behaviour ripples into consumers that have never heard of Firestore.
 
 ## 7. Options
 
@@ -527,6 +553,12 @@ or the error to expect.
 | `decode` | `decode(document) == message`, or raises the expected error |
 | `schema` | registering the named message type raises the expected error |
 
+The table names operations, not signatures, and the implementations deliberately
+differ: Dart and Java take `decode(document, prototype)` with the type token
+last, while TypeScript takes `decode(schema, document)` — there the schema is a
+real argument rather than a type token, so it belongs on the same side as it sits
+in `encode`. Conformance is about the values that come out.
+
 Inputs are **proto3 JSON**, not text format: text format has no parser in the
 Dart runtime or in protobuf-es, so a `.textproto` fixture would be unreadable in
 two of the three target languages. Expected output is **Firestore REST `Value`
@@ -583,7 +615,7 @@ Frozen at v1.0, and breaking to change afterwards:
   they are first written.
 - **The option extension number** ([§7](#7-options)), which must be registered
   before v1.0 for exactly this reason.
-- **The seven error names** ([§9](#9-conformance)). Implementations report
+- **The eight error names** ([§9](#9-conformance)). Implementations report
   against them, so renaming one silently breaks every harness.
 - **`manifest.json`'s `version` and the vector file layout**, which every
   implementation's test harness reads.
