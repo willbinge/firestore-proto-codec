@@ -7,3 +7,4 @@ dist/
 .dart_tool/
 pubspec.lock
 target/
+firestore-debug.log

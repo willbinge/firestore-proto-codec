@@ -27,6 +27,7 @@
     "build": "tsc -p tsconfig.build.json",
     "generate": "./tool/generate.sh",
     "test": "tsx --test test/*.test.ts",
+    "test:emulator": "firebase emulators:exec --only firestore --project demo-codec 'tsx --test test/emulator.test.ts'",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@bufbuild/protoc-gen-es": "^2.2.0",
+    "@google-cloud/firestore": "^9.0.1",
     "@types/node": "^22.10.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"

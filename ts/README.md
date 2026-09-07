@@ -135,7 +135,23 @@ schemas the web client writes.
 ## Development
 
 ```sh
-npm test          # node:test via tsx
+npm test              # node:test via tsx
+npm run test:emulator # server-backed vectors, see below
 npm run typecheck
 ./tool/generate.sh
 ```
+
+`npm test` is entirely in-memory. `npm run test:emulator` runs
+[test/emulator.test.ts](test/emulator.test.ts) inside
+`firebase emulators:exec`, pinning the three things no in-memory vector can
+reach: that a `Timestamp`, `Duration` and `LatLng` come back as native
+Firestore types, that Firestore truncates a stored `Timestamp` to
+**microseconds** so sub-microsecond nanos do not survive, and that a `double`
+holding an integral value is stored as an Integer. It also checks that the
+default adapter is refused outright by the admin SDK, which is what makes
+forgetting the adapter a loud failure rather than a wrong storage type.
+
+It needs `firebase-tools` on the PATH and a JDK 21 or newer, which the Firestore
+emulator requires. The suite is skipped when `FIRESTORE_EMULATOR_HOST` is unset,
+so `npm test` stays green without either. `@google-cloud/firestore` is a
+dev dependency only -- the published package still has no Firebase dependency.

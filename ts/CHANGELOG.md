@@ -18,6 +18,10 @@ Not yet published. First release of the TypeScript implementation of
   `UNSUPPORTED_TYPE`. A `protoc-gen-js` message would otherwise read as
   entirely unset and encode to an empty document; see the README on bridging
   from `google-protobuf`.
+- Emulator-backed tests (`npm run test:emulator`) for the behaviour no
+  in-memory vector can reach: native Firestore types on a real write, the
+  microsecond truncation of a stored `Timestamp`, and an integral `double`
+  stored as an Integer.
 
 **`int64` requires `useBigInt`.** The Firestore JS SDKs return integers as
 `number`, which loses precision above 2^53. Configure the admin SDK with
