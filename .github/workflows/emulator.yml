@@ -1,0 +1,48 @@
+name: Emulator
+
+# ts/test/emulator.test.ts is the only place the codec meets a real Firestore:
+# the shared vectors in testdata/ are in-memory by construction, so what the
+# server does to a value on the way in cannot be pinned there.
+#
+# It runs on a clock rather than on every pull request. Half of what it asserts
+# -- microsecond truncation of a Timestamp, an integral double stored as an
+# Integer, the admin SDK refusing a custom prototype -- is behaviour no change
+# to this repository can break. Only Google can, so a schedule is the instrument
+# that can actually detect it, and per-PR runs would add a 130 MB emulator
+# download and two network dependencies to every review for no signal.
+
+on:
+  schedule:
+    # Mondays, 07:00 UTC.
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  emulator:
+    name: Firestore emulator
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ts
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ts/package-lock.json
+      - uses: actions/setup-java@v6
+        with:
+          # The Firestore emulator is a Java program, and firebase-tools
+          # requires 21 or newer.
+          java-version: '21'
+          distribution: temurin
+      - run: npm ci
+      # The firebase-tools version is pinned in the npm script, so this runs
+      # the same emulator build a contributor gets locally. Unpinned, a release
+      # of Google's could flip one of the behaviour assertions on its own
+      # schedule -- drift this job should report, not suffer.
+      - run: npm run test:emulator

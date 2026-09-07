@@ -151,7 +151,13 @@ holding an integral value is stored as an Integer. It also checks that the
 default adapter is refused outright by the admin SDK, which is what makes
 forgetting the adapter a loud failure rather than a wrong storage type.
 
-It needs `firebase-tools` on the PATH and a JDK 21 or newer, which the Firestore
-emulator requires. The suite is skipped when `FIRESTORE_EMULATOR_HOST` is unset,
-so `npm test` stays green without either. `@google-cloud/firestore` is a
-dev dependency only -- the published package still has no Firebase dependency.
+It needs a JDK 21 or newer, which the Firestore emulator requires;
+`firebase-tools` is fetched by the script at a pinned version, so the emulator
+build is the same one CI runs. The suite is skipped when
+`FIRESTORE_EMULATOR_HOST` is unset, so `npm test` stays green without a JDK.
+`@google-cloud/firestore` is a dev dependency only -- the published package
+still has no Firebase dependency.
+
+Nothing in a pull request can change what the server does, so CI runs this
+[weekly](../.github/workflows/emulator.yml) rather than per-PR, and it can be
+fired by hand from the Actions tab before a release.

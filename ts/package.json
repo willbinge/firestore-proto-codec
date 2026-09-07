@@ -27,7 +27,7 @@
     "build": "tsc -p tsconfig.build.json",
     "generate": "./tool/generate.sh",
     "test": "tsx --test test/*.test.ts",
-    "test:emulator": "firebase emulators:exec --only firestore --project demo-codec 'tsx --test test/emulator.test.ts'",
+    "test:emulator": "npx --yes firebase-tools@15.27.0 emulators:exec --only firestore --project demo-codec 'tsx --test test/emulator.test.ts'",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },

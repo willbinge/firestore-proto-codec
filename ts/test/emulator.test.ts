@@ -123,7 +123,7 @@ describe("firestore emulator", { skip }, () => {
       !bytesOf(WellKnownSchema, decoded as never).equals(
         bytesOf(WellKnownSchema, message as never),
       ),
-      "sub-microsecond nanos cannot survive; if this passes, Firestore changed",
+      "sub-microsecond nanos cannot survive; if this passes, the emulator changed",
     );
   });
 
