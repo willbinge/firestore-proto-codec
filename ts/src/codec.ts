@@ -589,10 +589,28 @@ function requireMessage(
   path?: string,
 ): void {
   if (isMessage(value, schema)) return;
+  // Naming the remedy is the point of the guard: this is the case it exists
+  // for, and it is the one case where the fix is known.
+  const remedy = isJspbMessage(value)
+    ? '; convert it first -- see "Bridging from google-protobuf" in the README'
+    : "";
   throw new CodecError(
     "UNSUPPORTED_TYPE",
-    `expected a protobuf-es ${schema.typeName}, got ${describeValue(value)}`,
+    `expected a protobuf-es ${schema.typeName}, got ${describeValue(value)}${remedy}`,
     path,
+  );
+}
+
+/**
+ * A `protoc-gen-js` message, detected positively. The generated classes are
+ * anonymous, so there is no name to fall back on, and `displayName` is set
+ * only under `goog.DEBUG && !COMPILED`. These two methods are on every one.
+ */
+function isJspbMessage(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as { serializeBinary?: unknown; toObject?: unknown };
+  return (
+    typeof v.serializeBinary === "function" && typeof v.toObject === "function"
   );
 }
 
@@ -600,8 +618,13 @@ function describeValue(value: unknown): string {
   if (value === null) return "null";
   if (typeof value !== "object") return typeof value;
   if (isMessage(value)) return value.$typeName;
+  if (isJspbMessage(value)) return "a google-protobuf message";
+  // An anonymous class has a name, and it is the empty string -- as
+  // uninformative as having none, and it would read as a dangling "got a ".
   const name = (value as { constructor?: { name?: string } }).constructor?.name;
-  return name === undefined || name === "Object" ? "a plain object" : `a ${name}`;
+  return name === undefined || name === "" || name === "Object"
+    ? "a plain object"
+    : `a ${name}`;
 }
 
 function readField(message: AnyMessage, field: DescField): unknown {
