@@ -18,19 +18,43 @@ published under `com.codebinge`, including future ones. The `<groupId>` in
 `pom.xml` is settled and must not change — it is the one coordinate consumers
 depend on by name, and it cannot be altered after a first release.
 
-### 2. Create a signing key
+### 2. Create a signing key — done, algorithm unproven
 
 Central requires every artifact to be signed, and the public key must be on a
 public keyserver before upload.
 
+**Current key**, generated and published 2026-09-07:
+
+```
+ed25519  5C1093B91E771489A94D640EECAAE69B50701F11  Will <will@codebinge.com>
+         published to keyserver.ubuntu.com, expires 2029-09-06
+```
+
+Use `--full-generate-key`, not `--gen-key`. The latter takes the current
+default parameters with no dialog at all — on GnuPG 2.5 that default is
+ed25519, which is how the key above ended up EdDSA rather than RSA.
+
 ```sh
-gpg --gen-key                                  # RSA 4096, no expiry or a long one
+gpg --full-generate-key                        # dialogs for algorithm, size, expiry
 gpg --list-secret-keys --keyid-format=long     # note the key id
 gpg --keyserver keyserver.ubuntu.com --send-keys <KEY_ID>
 ```
 
-Back the private key up somewhere durable. Losing it does not break published
-artifacts, but it means generating and re-publishing a new key.
+Sonatype states no formal algorithm requirement, but every example in their
+documentation uses RSA and EdDSA is not mentioned, so ed25519 support is
+unconfirmed. This is safe to discover empirically: `autoPublish` is `false`, so
+a rejected signature surfaces during portal validation with nothing published.
+If it is rejected, generate an RSA 4096 key with `--full-generate-key`, publish
+it alongside this one — keyservers hold multiple keys per identity — and
+redeploy. Keyservers supported by Central: `keyserver.ubuntu.com`,
+`keys.openpgp.org`, `pgp.mit.edu`.
+
+Back the private key up somewhere durable. Losing it does not invalidate
+published artifacts, but it means generating and publishing a new key.
+
+The expiry matters only for future releases: artifacts signed while the key was
+valid stay valid. Extend it, or make a new key, before releasing after
+2029-09-06.
 
 ### 3. Generate a Central token and store it
 
