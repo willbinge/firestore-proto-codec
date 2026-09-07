@@ -19,6 +19,9 @@ final task = codec.decode(snapshot.data()!, Task());  // and back
 `int`, `double`, `bool`, `List`, `Map` — plus whatever the `FirestoreTypes`
 adapter produces for the three types protobuf cannot express.
 
+`decode`'s second argument is a type token: it is never read and never
+modified, and the message you get back is always a fresh one.
+
 ## Binding to an SDK
 
 The default adapter emits dependency-free `FsTimestamp` / `FsBlob` /

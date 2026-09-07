@@ -42,10 +42,18 @@ class FirestoreProtoCodec {
   Map<String, Object?> encode(GeneratedMessage message) =>
       _encodeMessage(message, 1, '');
 
-  /// Decodes [document] into [into], which is mutated and returned.
-  T decode<T extends GeneratedMessage>(Map<String, Object?> document, T into) {
-    _decodeInto(into, document, '');
-    return into;
+  /// Decodes [document] into a new message of [prototype]'s type.
+  ///
+  /// [prototype] is a type token: it is never read and never modified, so pass
+  /// a plain `Task()`. The result is always a fresh message. Decoding into the
+  /// instance handed in would leave any field the document omits untouched and
+  /// *append* to repeated fields rather than replace them, so reusing one
+  /// message across two documents silently accumulated.
+  T decode<T extends GeneratedMessage>(
+      Map<String, Object?> document, T prototype) {
+    final message = prototype.createEmptyInstance() as T;
+    _decodeInto(message, document, '');
+    return message;
   }
 
   /// Throws if [prototype]'s type, or any type it reaches, cannot be encoded.

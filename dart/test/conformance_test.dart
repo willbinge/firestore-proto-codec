@@ -79,6 +79,26 @@ void main() {
     expect(decoded.duration.nanos, equals(-250000));
   });
 
+  // The second argument is a type token, not a target. Decoding into it left
+  // fields the document omits untouched and appended to repeated fields, so a
+  // reused message accumulated across documents.
+  test('decode ignores state on the prototype', () {
+    final populated = td.Composite()
+      ..strings.add('stale')
+      ..messages.add(td.Inner()..value = 'stale')
+      ..stringMap['stale'] = 'stale';
+
+    final decoded = codec.decode(<String, Object?>{
+      'strings': <Object?>['fresh'],
+    }, populated);
+
+    expect(decoded.strings, equals(<String>['fresh']));
+    expect(decoded.messages, isEmpty);
+    expect(decoded.stringMap, isEmpty);
+    // And the caller's message is left alone.
+    expect(populated.strings, equals(<String>['stale']));
+  });
+
   group('conformance', () {
     for (final entry in (manifest['cases']! as List<Object?>)) {
       final c = entry! as Map<String, Object?>;

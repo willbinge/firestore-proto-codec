@@ -13,6 +13,11 @@ Not yet published. First release of the Dart implementation of
   input Dart's closed enums cannot construct — conformant by construction.
 - Ships `proto/codebinge/firestore/codec/v1/options.proto` for annotating your
   own schemas.
+- `decode` treats its second argument as a type token and returns a fresh
+  message, matching the Java implementation. It previously decoded into that
+  instance and returned it, which left fields the document omits untouched and
+  *appended* to repeated fields — so reusing one message across two documents
+  silently accumulated.
 
 **Not supported on the web.** `int64` fields convert through Dart `int`, which
 is a double on the web and loses precision above 2^53.
