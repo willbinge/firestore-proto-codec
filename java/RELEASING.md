@@ -7,20 +7,16 @@ What remains is account setup, which is one-time, and the release itself.
 
 ## One-time setup
 
-### 1. Claim the `com.codebinge` namespace
+### 1. Claim the `com.codebinge` namespace — ✅ done
 
-Sign in at [central.sonatype.com](https://central.sonatype.com) and add
-`com.codebinge` as a namespace. Central issues a verification key and asks for
-a DNS `TXT` record on `codebinge.com` containing it. Add the record, then click
-verify; propagation is usually minutes.
+Verified on Central via a DNS `TXT` record on `codebinge.com`, 2026-09-07. It
+matches the Java package the generated code already uses (`option java_package`
+in `options.proto`).
 
-`com.codebinge` is unclaimed on Central, and it matches the Java package the
-generated code already uses (`option java_package` in `options.proto`).
-
-> If DNS on `codebinge.com` is not available, the fallback is
-> `io.github.willbinge`, which Central verifies from GitHub account ownership
-> with no DNS step. It would mean changing `<groupId>`, the one coordinate that
-> can never change after the first release — consumers depend on it by name.
+Nothing to redo: namespace verification is permanent and covers every artifact
+published under `com.codebinge`, including future ones. The `<groupId>` in
+`pom.xml` is settled and must not change — it is the one coordinate consumers
+depend on by name, and it cannot be altered after a first release.
 
 ### 2. Create a signing key
 
