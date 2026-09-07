@@ -3,7 +3,7 @@ import { deepStrictEqual, ok, throws } from "node:assert/strict";
 import { test } from "node:test";
 
 import { fromJson, toBinary } from "@bufbuild/protobuf";
-import type { DescMessage, JsonValue } from "@bufbuild/protobuf";
+import type { DescMessage, JsonValue, Message } from "@bufbuild/protobuf";
 
 import { CodecError, FirestoreProtoCodec } from "../src/index.js";
 import {
@@ -67,7 +67,7 @@ interface Case {
 const manifest = readJson("manifest.json") as unknown as { cases: Case[] };
 const codec = new FirestoreProtoCodec();
 
-const buildMessage = (schema: DescMessage, relative: string): unknown =>
+const buildMessage = (schema: DescMessage, relative: string): Message =>
   fromJson(schema, readJson(relative) as JsonValue);
 
 const hasCode = (code: string) => (error: unknown) => {
@@ -109,8 +109,8 @@ for (const c of manifest.cases) {
         const actual = codec.decode(schema, document);
         const expected = buildMessage(schema, c.message_file!);
         deepStrictEqual(
-          Buffer.from(toBinary(schema, actual as never)),
-          Buffer.from(toBinary(schema, expected as never)),
+          Buffer.from(toBinary(schema, actual)),
+          Buffer.from(toBinary(schema, expected)),
         );
       }
     }

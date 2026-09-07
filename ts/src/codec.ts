@@ -1,5 +1,16 @@
-import { create, getOption, hasOption, ScalarType } from "@bufbuild/protobuf";
-import type { DescEnum, DescField, DescMessage } from "@bufbuild/protobuf";
+import {
+  create,
+  getOption,
+  hasOption,
+  isMessage,
+  ScalarType,
+} from "@bufbuild/protobuf";
+import type {
+  DescEnum,
+  DescField,
+  DescMessage,
+  MessageShape,
+} from "@bufbuild/protobuf";
 import { FeatureSet_FieldPresence } from "@bufbuild/protobuf/wkt";
 
 import { CodecError } from "./errors.js";
@@ -81,12 +92,19 @@ const isExplicit = (field: DescField): boolean =>
 export class FirestoreProtoCodec {
   constructor(readonly types: FirestoreTypes = new DefaultFirestoreTypes()) {}
 
-  encode(schema: DescMessage, message: unknown): FirestoreDocument {
-    return this.encodeMessage(schema, message as AnyMessage, 1, "");
+  encode<Desc extends DescMessage>(
+    schema: Desc,
+    message: MessageShape<Desc>,
+  ): FirestoreDocument {
+    requireMessage(schema, message);
+    return this.encodeMessage(schema, message as unknown as AnyMessage, 1, "");
   }
 
-  decode(schema: DescMessage, document: FirestoreDocument): unknown {
-    return this.decodeMessage(schema, document, "");
+  decode<Desc extends DescMessage>(
+    schema: Desc,
+    document: FirestoreDocument,
+  ): MessageShape<Desc> {
+    return this.decodeMessage(schema, document, "") as MessageShape<Desc>;
   }
 
   /** Throws if this type, or any type it reaches, cannot be encoded. */
@@ -267,6 +285,7 @@ export class FirestoreProtoCodec {
         path,
       );
     }
+    requireMessage(schema, value, path);
     const sub = value as AnyMessage;
     if (schema.typeName === TIMESTAMP) {
       return this.types.timestamp(
@@ -555,6 +574,34 @@ function writeField(message: AnyMessage, field: DescField, value: unknown): void
   } else {
     message[field.localName] = value;
   }
+}
+
+/**
+ * protobuf-es stamps every message with `$typeName`. A message from another
+ * runtime has none: `protoc-gen-js` keeps its fields in a private array behind
+ * getters, so every `readField` would return undefined and the message would
+ * encode to an empty document without a word. Refuse it instead -- see the
+ * README on bridging from google-protobuf.
+ */
+function requireMessage(
+  schema: DescMessage,
+  value: unknown,
+  path?: string,
+): void {
+  if (isMessage(value, schema)) return;
+  throw new CodecError(
+    "UNSUPPORTED_TYPE",
+    `expected a protobuf-es ${schema.typeName}, got ${describeValue(value)}`,
+    path,
+  );
+}
+
+function describeValue(value: unknown): string {
+  if (value === null) return "null";
+  if (typeof value !== "object") return typeof value;
+  if (isMessage(value)) return value.$typeName;
+  const name = (value as { constructor?: { name?: string } }).constructor?.name;
+  return name === undefined || name === "Object" ? "a plain object" : `a ${name}`;
 }
 
 function readField(message: AnyMessage, field: DescField): unknown {

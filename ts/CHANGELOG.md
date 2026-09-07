@@ -12,6 +12,12 @@ Not yet published. First release of the TypeScript implementation of
 - Passes all 37 shared conformance vectors.
 - Ships `proto/codebinge/firestore/codec/v1/options.proto` for annotating your
   own schemas.
+- `encode` and `decode` are generic over the descriptor, so the message type is
+  checked at compile time rather than accepted as `unknown`.
+- `encode` rejects anything that is not a protobuf-es message with
+  `UNSUPPORTED_TYPE`. A `protoc-gen-js` message would otherwise read as
+  entirely unset and encode to an empty document; see the README on bridging
+  from `google-protobuf`.
 
 **`int64` requires `useBigInt`.** The Firestore JS SDKs return integers as
 `number`, which loses precision above 2^53. Configure the admin SDK with

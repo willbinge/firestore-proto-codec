@@ -75,6 +75,38 @@ nothing needs registering. protobuf-es
 keeps custom options and field presence on the descriptor, so `getOption()` and
 `field.presence` answer everything the codec needs directly from the schema.
 
+## Bridging from `google-protobuf`
+
+`protoc-gen-js` is the older JavaScript generator, and it is what most
+Firebase-era proto tooling emits. Its messages are class instances that keep
+their fields in a private array behind `getFoo()` accessors — nothing this
+codec can read, and nothing protobuf-es can describe. Handing one to `encode`
+throws `CodecError("UNSUPPORTED_TYPE")`; it does not write an empty document.
+
+Generate a protobuf-es copy of the same `.proto` and convert through the binary
+form, which is the one representation both runtimes agree on:
+
+```ts
+import { fromBinary, toBinary } from "@bufbuild/protobuf";
+
+// google-protobuf -> protobuf-es -> Firestore
+const task = fromBinary(TaskSchema, legacy.serializeBinary());
+await doc.set(codec.encode(TaskSchema, task));
+
+// Firestore -> protobuf-es -> google-protobuf
+const back = proto.Task.deserializeBinary(
+  toBinary(TaskSchema, codec.decode(TaskSchema, snap.data()!)),
+);
+```
+
+`protoc-gen-es` runs in the same `protoc` invocation as `protoc-gen-js`, so the
+two outputs coexist and nothing else in the application has to move. Only the
+messages you persist need a protobuf-es copy.
+
+Each direction costs one serialization and one parse per document. The binary
+conversion itself is lossless, unknown fields included; what reaches Firestore
+is still only what the schema declares.
+
 ## Known limits
 
 **Admin SDK only.** The web client SDK (`firebase/firestore`) does not accept
