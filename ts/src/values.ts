@@ -1,8 +1,13 @@
 /**
  * Firestore has three value types protobuf cannot express as plain data.
  * Implement this to bind them to a particular SDK's classes -- `Timestamp`,
- * `Bytes`, and `GeoPoint` in `firebase-admin`, for example. Everything else in
- * the encoding is a plain string, number, bigint, boolean, array, or object.
+ * `Buffer`, and `GeoPoint` in `firebase-admin`, for example. (Bytes are plain
+ * `Buffer`s there; the `Bytes` class belongs to the web client SDK.)
+ * Everything else in the encoding is a plain string, number, bigint, boolean,
+ * array, or object.
+ *
+ * The admin implementation ships as `firestore-proto-codec/admin`. Write your
+ * own only for another SDK.
  */
 export interface FirestoreTypes {
   timestamp(seconds: bigint, nanos: number): unknown;
@@ -34,8 +39,9 @@ export class FsGeoPoint {
   ) {}
 }
 
-/** Dependency-free default. Swap in an SDK-specific implementation to write
- * directly to Firestore. */
+/** Dependency-free default. It cannot write to Firestore: the admin SDK
+ * refuses these custom prototypes outright. Swap in an SDK-specific
+ * implementation -- `firestore-proto-codec/admin` for firebase-admin. */
 export class DefaultFirestoreTypes implements FirestoreTypes {
   timestamp(seconds: bigint, nanos: number): unknown {
     return new FsTimestamp(seconds, nanos);

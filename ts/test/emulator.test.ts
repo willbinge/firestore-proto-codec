@@ -13,7 +13,9 @@ import { deepStrictEqual, match, ok, strictEqual, throws } from "node:assert/str
 import { create, toBinary } from "@bufbuild/protobuf";
 import { Firestore, GeoPoint, Timestamp } from "@google-cloud/firestore";
 
-import { FirestoreProtoCodec, type FirestoreTypes } from "../src/index.js";
+import { FirestoreProtoCodec } from "../src/index.js";
+// Aliased because every test below reads better as `codec`.
+import { adminCodec as codec } from "../src/admin.js";
 import { ScalarsSchema, WellKnownSchema } from "./generated/testdata_pb.js";
 
 const PROJECT = "demo-codec";
@@ -23,25 +25,6 @@ const skip =
     ? "requires FIRESTORE_EMULATOR_HOST -- run `npm run test:emulator`"
     : false;
 
-/** The adapter from README.md, under test rather than only written down. */
-class AdminTypes implements FirestoreTypes {
-  timestamp = (seconds: bigint, nanos: number) =>
-    new Timestamp(Number(seconds), nanos);
-  blob = (bytes: Uint8Array) => Buffer.from(bytes);
-  geoPoint = (lat: number, lng: number) => new GeoPoint(lat, lng);
-
-  readTimestamp = (v: unknown) =>
-    v instanceof Timestamp
-      ? { seconds: BigInt(v.seconds), nanos: v.nanoseconds }
-      : undefined;
-  readBlob = (v: unknown) =>
-    v instanceof Uint8Array ? new Uint8Array(v) : undefined;
-  readGeoPoint = (v: unknown) =>
-    v instanceof GeoPoint
-      ? { latitude: v.latitude, longitude: v.longitude }
-      : undefined;
-}
-
 // useBigInt is not optional: without it every integer comes back as a number
 // and int64 loses precision above 2^53, which the scalars test would catch.
 const db =
@@ -50,7 +33,6 @@ const db =
     : new Firestore({ projectId: PROJECT, useBigInt: true });
 after(() => db?.terminate());
 
-const codec = new FirestoreProtoCodec(new AdminTypes());
 const bytesOf = (schema: typeof WellKnownSchema | typeof ScalarsSchema, m: never) =>
   Buffer.from(toBinary(schema, m));
 

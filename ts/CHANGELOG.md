@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0
+
+Unreleased.
+
+- Ships the admin adapter as `firestore-proto-codec/admin` -- `adminCodec` and
+  `AdminFirestoreTypes` for `firebase-admin` / `@google-cloud/firestore`, which
+  every admin consumer previously had to copy out of the README. Its reads are
+  structural rather than `instanceof`, so a duplicated `@google-cloud/firestore`
+  in the tree no longer fails every decode with `expected a timestamp`.
+  `@google-cloud/firestore` is an optional peer dependency and only that subpath
+  imports it, so the root entry point still carries no Firebase dependency.
+
 ## 0.2.0
 
 Unreleased.

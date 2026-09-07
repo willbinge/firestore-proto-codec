@@ -45,34 +45,35 @@ int64; decoding hands them back as strings.
 ## Binding to an SDK
 
 The default adapter emits dependency-free `FsTimestamp` / `FsBlob` /
-`FsGeoPoint`. Supply your own to write straight to Firestore:
+`FsGeoPoint`, which the admin SDK refuses outright: it rejects custom
+prototypes, so a forgotten adapter throws at the write and stores nothing.
+
+For `firebase-admin` / `@google-cloud/firestore`, the adapter ships:
 
 ```ts
-class AdminTypes implements FirestoreTypes {
-  timestamp = (seconds: bigint, nanos: number) =>
-    new Timestamp(Number(seconds), nanos);
-  blob = (bytes: Uint8Array) => Buffer.from(bytes);
-  geoPoint = (lat: number, lng: number) => new GeoPoint(lat, lng);
+import { adminCodec } from "firestore-proto-codec/admin";
 
-  readTimestamp = (v: unknown) =>
-    v instanceof Timestamp
-      ? { seconds: BigInt(v.seconds), nanos: v.nanoseconds }
-      : undefined;
-  // Buffer extends Uint8Array, so this covers both.
-  readBlob = (v: unknown) =>
-    v instanceof Uint8Array ? new Uint8Array(v) : undefined;
-  readGeoPoint = (v: unknown) =>
-    v instanceof GeoPoint
-      ? { latitude: v.latitude, longitude: v.longitude }
-      : undefined;
-}
-
-const codec = new FirestoreProtoCodec(new AdminTypes());
+await doc.set(adminCodec.encode(TaskSchema, task));
 ```
 
-Verified against `@google-cloud/firestore` 9.0.1: there is no `Bytes` class in
-the admin SDK (that one belongs to the web client SDK), and bytes values are
-plain `Buffer`s.
+`AdminFirestoreTypes` comes from the same subpath if you would rather construct
+the codec yourself. `@google-cloud/firestore` is an **optional peer
+dependency** — only that subpath imports it, so the root entry point still
+carries no Firebase dependency. `firebase-admin` already depends on it, so a
+hoisted layout resolves it with nothing added; a strict one (pnpm, Yarn PnP)
+needs `@google-cloud/firestore` in your own dependencies.
+
+Its reads are structural rather than `instanceof`. The codec only calls them at
+a position the schema has already declared a `Timestamp`, `bytes` or `LatLng`,
+so there is no type to discriminate and nothing to lose — and a structural
+check survives two copies of `@google-cloud/firestore` in the tree, which would
+otherwise make `instanceof` false and fail every read with
+`expected a timestamp`.
+
+For any other SDK, implement `FirestoreTypes` yourself; [src/admin.ts](src/admin.ts)
+is the worked example. Verified against `@google-cloud/firestore` 9.0.1: there
+is no `Bytes` class in the admin SDK (that one belongs to the web client SDK),
+and bytes values are plain `Buffer`s.
 
 Keeping this an interface is why the core has no Firebase dependency.
 
@@ -164,8 +165,9 @@ It needs a JDK 21 or newer, which the Firestore emulator requires;
 `firebase-tools` is fetched by the script at a pinned version, so the emulator
 build is the same one CI runs. The suite is skipped when
 `FIRESTORE_EMULATOR_HOST` is unset, so `npm test` stays green without a JDK.
-`@google-cloud/firestore` is a dev dependency only -- the published package
-still has no Firebase dependency.
+`@google-cloud/firestore` is a dev dependency and an optional peer -- nothing
+but the `/admin` subpath imports it, so the root entry point has no Firebase
+dependency.
 
 Nothing in a pull request can change what the server does, so CI runs this
 [weekly](../.github/workflows/emulator.yml) rather than per-PR, and it can be
