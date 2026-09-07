@@ -1,8 +1,25 @@
 # Changelog
 
+## 0.2.0
+
+Unreleased, and waiting on the option extension number registration
+([§7](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md#7-options)).
+The number changes before this ships; that change is the whole reason 0.1.0 is
+deprecated rather than quietly superseded.
+
 ## 0.1.0
 
-Not yet published. First release of the TypeScript implementation of
+Published 2026-09-07 and **deprecated on npm**, because it carries the
+provisional option extension number.
+
+The deprecation is a caution, not a defect: the codec is correct and passes all
+37 conformance vectors. It matters only if you annotate your own schemas with
+`codebinge.firestore.codec.v1.field` — once the number changes, an
+unregenerated consumer stops seeing the annotation *silently* rather than
+failing, so those fields revert to default encoding. Code that only encodes and
+decodes never touches the number and is unaffected.
+
+First release of the TypeScript implementation of
 [encoding specification v0.1](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md).
 
 - Encode a protobuf message to a map of Firestore-native values, and decode it
