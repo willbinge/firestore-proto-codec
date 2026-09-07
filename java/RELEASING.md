@@ -49,8 +49,31 @@ it alongside this one — keyservers hold multiple keys per identity — and
 redeploy. Keyservers supported by Central: `keyserver.ubuntu.com`,
 `keys.openpgp.org`, `pgp.mit.edu`.
 
+#### Make the key reachable from a non-interactive build
+
+Maven runs `gpg` without a terminal, so gpg-agent needs a pinentry it can drive
+on its own. The `pinentry-curses` and `pinentry-tty` that ship with the Homebrew
+formula both want a tty and fail under Maven with `gpg: signing failed: No
+pinentry`. Install the graphical one and point the agent at it:
+
+```sh
+brew install pinentry-mac
+echo "pinentry-program $(brew --prefix)/bin/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
+gpgconf --kill gpg-agent
+```
+
+The first signature of a session opens a dialog; the agent caches the
+passphrase afterwards. Tick its "save in Keychain" box if you want it to
+persist across reboots.
+
 Back the private key up somewhere durable. Losing it does not invalidate
 published artifacts, but it means generating and publishing a new key.
+
+The revocation certificate gpg wrote at
+`~/.gnupg/openpgp-revocs.d/<FINGERPRINT>.rev` is the one genuinely
+irreplaceable file — it cannot be regenerated once the key is lost, and it is
+the only way to tell keyservers to stop trusting the key. Back it up separately
+from the key itself.
 
 The expiry matters only for future releases: artifacts signed while the key was
 valid stay valid. Extend it, or make a new key, before releasing after

@@ -127,14 +127,21 @@
                 <goals><goal>sign</goal></goals>
               </execution>
             </executions>
-            <configuration>
-              <!-- Take the passphrase from the gpg-agent rather than from a
-                   property, so it never appears in a command line or a POM. -->
-              <gpgArguments>
-                <arg>--pinentry-mode</arg>
-                <arg>loopback</arg>
-              </gpgArguments>
-            </configuration>
+            <!-- No <gpgArguments> on purpose. The passphrase comes from
+                 gpg-agent, which prompts through pinentry once and caches it,
+                 so it never appears in a command line, a property or this file.
+
+                 Do NOT add `--pinentry-mode loopback` here: loopback means gpg
+                 takes the passphrase from the calling program rather than the
+                 agent, and Maven supplies none, so signing fails with
+                 "No pinentry". Loopback is the CI configuration, where it is
+                 paired with a passphrase piped from a secret:
+
+                   mvn -Prelease deploy \
+                     -Dgpg.passphraseServerId=gpg -Dgpg.pinentry-mode=loopback
+
+                 Local releases need a pinentry gpg-agent can actually reach
+                 from a non-interactive build; see RELEASING.md. -->
           </plugin>
 
           <plugin>
