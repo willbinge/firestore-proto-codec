@@ -32,10 +32,19 @@ cd ts   && npm ci && npm test
 cd java && mvn test
 ```
 
-CI runs exactly these. Regenerating protobuf code needs `protoc` on your path
-and is per-package: `dart/tool/generate.sh`, `ts/tool/generate.sh`,
-`java/tool/generate.sh`. These currently hardcode a Homebrew include path, so
-they are not run in CI.
+CI runs exactly these.
+
+Regenerating protobuf code is per-package: `dart/tool/generate.sh`,
+`ts/tool/generate.sh`, `java/tool/generate.sh`. Each needs `protoc` on your
+PATH, plus that language's plugin — `protoc-gen-dart` for Dart, and `npm
+install` already run for TypeScript's `protoc-gen-es`. Nothing needs an include
+path for `google/protobuf/*`; `protoc` supplies those itself.
+
+CI does not verify that generated code is up to date. Generator output varies
+with the `protoc` and plugin versions that produced it, so such a check would
+have to pin all three toolchains exactly or fail spuriously on an unrelated
+upgrade. Until it exists, regenerate and commit the result in the same change
+as the `.proto` edit.
 
 If you change `proto/codebinge/firestore/codec/v1/options.proto`, run
 `./tool/sync-options-proto.sh` to update the per-package copies.
