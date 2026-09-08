@@ -40,6 +40,10 @@
          gencode refuses to load against an older runtime, and that is a
          class-load failure rather than a compile error; see ProtoGencodeTest. -->
     <protobuf.version>4.33.3</protobuf.version>
+    <!-- Only CloudFirestoreTypes touches this; see the optional dependency
+         below. google-cloud-core, which carries com.google.cloud.Timestamp,
+         comes in with it. -->
+    <firestore.version>3.44.0</firestore.version>
   </properties>
 
   <dependencies>
@@ -47,6 +51,18 @@
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
       <version>${protobuf.version}</version>
+    </dependency>
+
+    <!-- Optional so it stays out of a consumer's tree on this library's
+         account: anyone who never loads CloudFirestoreTypes never needs it,
+         and anyone who does already depends on the SDK directly or through
+         firebase-admin. It is on our own compile and test classpath as usual,
+         which is what CloudFirestoreTypesTest runs against. -->
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-firestore</artifactId>
+      <version>${firestore.version}</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>

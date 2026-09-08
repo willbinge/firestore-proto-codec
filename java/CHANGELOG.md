@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0
+
+Unreleased.
+
+- Ships the `FirestoreTypes` adapter for the server SDK as
+  `CloudFirestoreTypes`, covering `google-cloud-firestore` and `firebase-admin`
+  alike, since the latter bundles the former. `google-cloud-firestore` is an
+  *optional* dependency, so the core still puts no Google Cloud jars in a
+  consumer's tree.
+
 ## 0.1.0
 
 Not yet published. First release of the Java implementation of
