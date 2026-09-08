@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0
+
+Not yet published.
+
+- `SdkFirestoreTypes` binds an SDK by taking its three constructors --
+  `SdkFirestoreTypes(timestamp: Timestamp.new, blob: Blob.new, geoPoint:
+  GeoPoint.new)` -- in place of the adapter class every consumer was copying out
+  of the README. It reads properties structurally, because naming
+  `cloud_firestore`'s types here would drag in the Flutter SDK and pub has no
+  optional dependency to hide that behind.
+
 ## 0.1.0
 
 Not yet published. First release of the Dart implementation of

@@ -25,32 +25,43 @@ modified, and the message you get back is always a fresh one.
 ## Binding to an SDK
 
 The default adapter emits dependency-free `FsTimestamp` / `FsBlob` /
-`FsGeoPoint`. Supply your own to write straight to Firestore:
+`FsGeoPoint`, which are placeholders rather than Firestore values. Bind the
+SDK's own classes by handing over their constructors:
 
 ```dart
-class CloudFirestoreTypes implements FirestoreTypes {
-  @override
-  Object timestamp(int seconds, int nanos) => Timestamp(seconds, nanos);
-  @override
-  Object blob(Uint8List bytes) => Blob(bytes);
-  @override
-  Object geoPoint(double lat, double lng) => GeoPoint(lat, lng);
-
-  @override
-  ({int seconds, int nanos})? readTimestamp(Object v) => v is Timestamp
-      ? (seconds: v.seconds, nanos: v.nanoseconds)
-      : null;
-  @override
-  Uint8List? readBlob(Object v) => v is Blob ? v.bytes : null;
-  @override
-  ({double latitude, double longitude})? readGeoPoint(Object v) =>
-      v is GeoPoint ? (latitude: v.latitude, longitude: v.longitude) : null;
-}
-
-final codec = FirestoreProtoCodec(types: CloudFirestoreTypes());
+final codec = FirestoreProtoCodec(
+  types: SdkFirestoreTypes(
+    timestamp: Timestamp.new,
+    blob: Blob.new,
+    geoPoint: GeoPoint.new,
+  ),
+);
 ```
 
-Verified against `cloud_firestore_platform_interface` 8.0.6.
+Verified against `cloud_firestore_platform_interface` 8.0.6, whose
+`Timestamp(int, int)`, `Blob(Uint8List)` and `GeoPoint(double, double)` match
+those signatures exactly. Any SDK of the same shape works, a server-side Dart
+client included, provided its timestamp exposes `seconds` and `nanoseconds`, its
+blob `bytes`, and its geo point `latitude` and `longitude`.
+
+**Why constructors rather than a class you import.** The
+[TypeScript package](../ts/) ships its adapter outright, on a subpath that
+pulls the SDK in only for consumers who import it. Pub has no equivalent --
+no optional dependencies, no conditional exports -- and
+`cloud_firestore_platform_interface`, where those three classes live, depends
+on the Flutter SDK. Naming them here would make this package Flutter-only and
+untestable off-device, so it takes their constructors instead and stays pure
+Dart.
+
+The reads are duck-typed for that same reason rather than TypeScript's: there
+is no type here to write `is` against. It costs less than it appears to,
+because the codec never uses these to discriminate a type -- it calls them only
+at a position the schema has already declared a `Timestamp`, `bytes` or
+`LatLng`. A value of the wrong shape reads as null, and the codec reports the
+field path.
+
+Implementing [`FirestoreTypes`](lib/src/values.dart) by hand still works, and is
+the better answer if you want the SDK's types checked at compile time.
 
 Keeping this an interface is why the core has no Firebase dependency and can be
 tested off-device.

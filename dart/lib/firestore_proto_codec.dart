@@ -6,5 +6,6 @@ library;
 export 'src/codec.dart' show FirestoreProtoCodec, maxNestingDepth;
 export 'src/errors.dart' show CodecError, CodecErrorCode;
 export 'src/schema.dart' show FieldRules, SchemaRegistry;
+export 'src/sdk_types.dart' show SdkFirestoreTypes;
 export 'src/values.dart'
     show DefaultFirestoreTypes, FirestoreTypes, FsBlob, FsGeoPoint, FsTimestamp;

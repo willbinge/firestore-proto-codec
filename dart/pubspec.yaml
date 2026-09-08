@@ -1,6 +1,6 @@
 name: firestore_proto_codec
 description: Encode a protobuf message as a Firestore value, and decode it back.
-version: 0.1.0
+version: 0.2.0
 repository: https://github.com/willbinge/firestore-proto-codec/tree/main/dart
 
 environment:
