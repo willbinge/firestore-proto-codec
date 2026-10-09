@@ -135,15 +135,15 @@ class Field extends $pb.GeneratedMessage {
 }
 
 class Options {
-  static final field_50000 = $pb.Extension<Field>(
+  static final field_1376 = $pb.Extension<Field>(
       _omitMessageNames ? '' : 'google.protobuf.FieldOptions',
-      _omitFieldNames ? '' : 'field_50000',
-      50000,
+      _omitFieldNames ? '' : 'field_1376',
+      1376,
       $pb.PbFieldType.OM,
       defaultOrMaker: Field.getDefault,
       subBuilder: Field.create);
   static void registerAllExtensions($pb.ExtensionRegistry registry) {
-    registry.add(field_50000);
+    registry.add(field_1376);
   }
 }
 

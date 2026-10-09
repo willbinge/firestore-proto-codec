@@ -27,7 +27,7 @@ public final class Options extends com.google.protobuf.GeneratedFile {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public static final int FIELD_FIELD_NUMBER = 50000;
+  public static final int FIELD_FIELD_NUMBER = 1376;
   /**
    * <code>extend .google.protobuf.FieldOptions { ... }</code>
    */
@@ -63,10 +63,10 @@ public final class Options extends com.google.protobuf.GeneratedFile {
       "\024\n\020KIND_UNSPECIFIED\020\000\022\022\n\016KIND_GEO_POINT\020" +
       "\001\022\034\n\030KIND_UNSIGNED_AS_INTEGER\020\002*@\n\014EnumE" +
       "ncoding\022\026\n\022ENUM_ENCODING_NAME\020\000\022\030\n\024ENUM_" +
-      "ENCODING_NUMBER\020\001:S\n\005field\022\035.google.prot" +
-      "obuf.FieldOptions\030\320\206\003 \001(\0132#.codebinge.fi" +
-      "restore.codec.v1.FieldB$\n com.codebinge." +
-      "firestore.codec.v1P\001b\006proto3"
+      "ENCODING_NUMBER\020\001:R\n\005field\022\035.google.prot" +
+      "obuf.FieldOptions\030\340\n \001(\0132#.codebinge.fir" +
+      "estore.codec.v1.FieldB$\n com.codebinge.f" +
+      "irestore.codec.v1P\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

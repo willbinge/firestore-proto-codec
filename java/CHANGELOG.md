@@ -18,5 +18,6 @@ Not yet published. First release of the Java implementation of
 against an older runtime, and that surfaces as a class-load failure rather than
 a compile error. `ProtoGencodeTest` pins this.
 
-The `options.proto` extension number is provisional and will change before 1.0.
+The `options.proto` extension number is 1376, registered to this project in
+protobuf's Global Extension Registry. It is fixed and will not change.
 See [§7](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md#7-options).

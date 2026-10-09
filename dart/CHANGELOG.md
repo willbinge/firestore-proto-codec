@@ -22,5 +22,6 @@ Not yet published. First release of the Dart implementation of
 **Not supported on the web.** `int64` fields convert through Dart `int`, which
 is a double on the web and loses precision above 2^53.
 
-The `options.proto` extension number is provisional and will change before 1.0.
+The `options.proto` extension number is 1376, registered to this project in
+protobuf's Global Extension Registry. It is fixed and will not change.
 See [§7](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md#7-options).

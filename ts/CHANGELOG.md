@@ -2,22 +2,29 @@
 
 ## 0.2.0
 
-Unreleased, and waiting on the option extension number registration
+Unreleased.
+
+**The option extension number changed, from 50000 to 1376**, now registered to
+this project in protobuf's Global Extension Registry
 ([§7](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md#7-options)).
-The number changes before this ships; that change is the whole reason 0.1.0 is
-deprecated rather than quietly superseded.
+It is fixed from here.
+
+This is the change 0.1.0 was deprecated for. If you annotated your own schemas
+while on 0.1.0, regenerate them against this release — an unregenerated consumer
+stops seeing the annotation *silently* rather than failing, so those fields
+revert to default encoding. Code that only encodes and decodes is unaffected.
 
 ## 0.1.0
 
-Published 2026-09-07 and **deprecated on npm**, because it carries the
-provisional option extension number.
+Published 2026-09-07 and **deprecated on npm**, because it carries extension
+number 50000 — since replaced by the registered 1376 in 0.2.0.
 
 The deprecation is a caution, not a defect: the codec is correct and passes all
 37 conformance vectors. It matters only if you annotate your own schemas with
-`codebinge.firestore.codec.v1.field` — once the number changes, an
-unregenerated consumer stops seeing the annotation *silently* rather than
-failing, so those fields revert to default encoding. Code that only encodes and
-decodes never touches the number and is unaffected.
+`codebinge.firestore.codec.v1.field`. Those annotations no longer apply as of
+0.2.0, and the failure is *silent* — fields revert to default encoding rather
+than erroring. Code that only encodes and decodes never touches the number and
+is unaffected.
 
 First release of the TypeScript implementation of
 [encoding specification v0.1](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md).
@@ -45,5 +52,4 @@ First release of the TypeScript implementation of
 `settings({useBigInt: true})`. Unsigned 64-bit fields are unaffected — they
 encode as strings and never touch `number`.
 
-The `options.proto` extension number is provisional and will change before 1.0.
-See [§7](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md#7-options).
+This release carries extension number 50000. See the 0.2.0 entry above.

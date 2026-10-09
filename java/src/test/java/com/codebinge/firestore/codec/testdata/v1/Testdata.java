@@ -130,53 +130,53 @@ public final class Testdata extends com.google.protobuf.GeneratedFile {
       "eld\030\r \001(\006\022\024\n\014double_field\030\016 \001(\001\022\023\n\013float" +
       "_field\030\017 \001(\002\"J\n\007Doubles\022\021\n\tnan_field\030\001 \001" +
       "(\001\022\025\n\rpos_inf_field\030\002 \001(\001\022\025\n\rneg_inf_fie" +
-      "ld\030\003 \001(\001\"\221\001\n\005Enums\022>\n\007as_name\030\001 \001(\0162-.co" +
+      "ld\030\003 \001(\001\"\220\001\n\005Enums\022>\n\007as_name\030\001 \001(\0162-.co" +
       "debinge.firestore.codec.testdata.v1.Stat" +
-      "us\022H\n\tas_number\030\002 \001(\0162-.codebinge.firest" +
-      "ore.codec.testdata.v1.StatusB\006\202\265\030\002\030\001\"\026\n\005" +
-      "Inner\022\r\n\005value\030\001 \001(\t\"\225\001\n\010Presence\022\027\n\nopt" +
-      "_string\030\001 \001(\tH\000\210\001\001\022\026\n\topt_int32\030\002 \001(\005H\001\210" +
-      "\001\001\022;\n\005inner\030\003 \001(\0132,.codebinge.firestore." +
-      "codec.testdata.v1.InnerB\r\n\013_opt_stringB\014" +
-      "\n\n_opt_int32\"\240\001\n\010Unsigned\022\014\n\004zero\030\001 \001(\004\022" +
-      "\022\n\nmax_signed\030\002 \001(\004\022\031\n\021min_unsigned_only" +
-      "\030\003 \001(\004\022\024\n\014max_unsigned\030\004 \001(\004\022\r\n\005fixed\030\005 " +
-      "\001(\006\022\032\n\nas_integer\030\006 \001(\004B\006\202\265\030\002(\002\022\026\n\006alway" +
-      "s\030\007 \001(\004B\006\202\265\030\002 \000\"\216\001\n\tWellKnown\022-\n\ttimesta" +
-      "mp\030\001 \001(\0132\032.google.protobuf.Timestamp\022+\n\010" +
-      "duration\030\002 \001(\0132\031.google.protobuf.Duratio" +
-      "n\022%\n\010location\030\003 \001(\0132\023.google.type.LatLng" +
-      "\"\331\003\n\tComposite\022<\n\006single\030\001 \001(\0132,.codebin" +
-      "ge.firestore.codec.testdata.v1.Inner\022\017\n\007" +
-      "strings\030\002 \003(\t\022>\n\010messages\030\003 \003(\0132,.codebi" +
-      "nge.firestore.codec.testdata.v1.Inner\022S\n" +
-      "\nstring_map\030\004 \003(\0132?.codebinge.firestore." +
-      "codec.testdata.v1.Composite.StringMapEnt" +
-      "ry\022U\n\013message_map\030\005 \003(\0132@.codebinge.fire" +
-      "store.codec.testdata.v1.Composite.Messag" +
-      "eMapEntry\0320\n\016StringMapEntry\022\013\n\003key\030\001 \001(\t" +
-      "\022\r\n\005value\030\002 \001(\t:\0028\001\032_\n\017MessageMapEntry\022\013" +
-      "\n\003key\030\001 \001(\t\022;\n\005value\030\002 \001(\0132,.codebinge.f" +
-      "irestore.codec.testdata.v1.Inner:\0028\001\"T\n\007" +
-      "Options\022\014\n\004kept\030\001 \001(\t\022\027\n\007dropped\030\002 \001(\tB\006" +
-      "\202\265\030\002\010\001\022\"\n\007renamed\030\003 \001(\tB\021\202\265\030\r\022\013stored_na" +
-      "me\"q\n\006Choice\022\016\n\004text\030\001 \001(\tH\000\022\020\n\006number\030\002" +
-      " \001(\005H\000\022=\n\005inner\030\003 \001(\0132,.codebinge.firest" +
-      "ore.codec.testdata.v1.InnerH\000B\006\n\004kind\"3\n" +
-      "\020StringifiedInt64\022\016\n\002id\030\001 \001(\003B\0020\001\022\017\n\003ids" +
-      "\030\002 \003(\003B\0020\001\"[\n\tRecursive\022\r\n\005label\030\001 \001(\t\022?" +
-      "\n\005child\030\002 \001(\01320.codebinge.firestore.code" +
-      "c.testdata.v1.Recursive\"\204\002\n\004Tree\022\r\n\005labe" +
-      "l\030\001 \001(\t\022=\n\010children\030\002 \003(\0132+.codebinge.fi" +
-      "restore.codec.testdata.v1.Tree\022E\n\005named\030" +
-      "\003 \003(\01326.codebinge.firestore.codec.testda" +
-      "ta.v1.Tree.NamedEntry\022\014\n\004tags\030\004 \003(\t\032Y\n\nN" +
-      "amedEntry\022\013\n\003key\030\001 \001(\t\022:\n\005value\030\002 \001(\0132+." +
-      "codebinge.firestore.codec.testdata.v1.Tr" +
-      "ee:\0028\001*D\n\006Status\022\022\n\016STATUS_UNKNOWN\020\000\022\021\n\r" +
-      "STATUS_ACTIVE\020\001\022\023\n\017STATUS_ARCHIVED\020\002B-\n)" +
-      "com.codebinge.firestore.codec.testdata.v" +
-      "1P\001b\006proto3"
+      "us\022G\n\tas_number\030\002 \001(\0162-.codebinge.firest" +
+      "ore.codec.testdata.v1.StatusB\005\202V\002\030\001\"\026\n\005I" +
+      "nner\022\r\n\005value\030\001 \001(\t\"\225\001\n\010Presence\022\027\n\nopt_" +
+      "string\030\001 \001(\tH\000\210\001\001\022\026\n\topt_int32\030\002 \001(\005H\001\210\001" +
+      "\001\022;\n\005inner\030\003 \001(\0132,.codebinge.firestore.c" +
+      "odec.testdata.v1.InnerB\r\n\013_opt_stringB\014\n" +
+      "\n_opt_int32\"\236\001\n\010Unsigned\022\014\n\004zero\030\001 \001(\004\022\022" +
+      "\n\nmax_signed\030\002 \001(\004\022\031\n\021min_unsigned_only\030" +
+      "\003 \001(\004\022\024\n\014max_unsigned\030\004 \001(\004\022\r\n\005fixed\030\005 \001" +
+      "(\006\022\031\n\nas_integer\030\006 \001(\004B\005\202V\002(\002\022\025\n\006always\030" +
+      "\007 \001(\004B\005\202V\002 \000\"\216\001\n\tWellKnown\022-\n\ttimestamp\030" +
+      "\001 \001(\0132\032.google.protobuf.Timestamp\022+\n\010dur" +
+      "ation\030\002 \001(\0132\031.google.protobuf.Duration\022%" +
+      "\n\010location\030\003 \001(\0132\023.google.type.LatLng\"\331\003" +
+      "\n\tComposite\022<\n\006single\030\001 \001(\0132,.codebinge." +
+      "firestore.codec.testdata.v1.Inner\022\017\n\007str" +
+      "ings\030\002 \003(\t\022>\n\010messages\030\003 \003(\0132,.codebinge" +
+      ".firestore.codec.testdata.v1.Inner\022S\n\nst" +
+      "ring_map\030\004 \003(\0132?.codebinge.firestore.cod" +
+      "ec.testdata.v1.Composite.StringMapEntry\022" +
+      "U\n\013message_map\030\005 \003(\0132@.codebinge.firesto" +
+      "re.codec.testdata.v1.Composite.MessageMa" +
+      "pEntry\0320\n\016StringMapEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
+      "\005value\030\002 \001(\t:\0028\001\032_\n\017MessageMapEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022;\n\005value\030\002 \001(\0132,.codebinge.fire" +
+      "store.codec.testdata.v1.Inner:\0028\001\"R\n\007Opt" +
+      "ions\022\014\n\004kept\030\001 \001(\t\022\026\n\007dropped\030\002 \001(\tB\005\202V\002" +
+      "\010\001\022!\n\007renamed\030\003 \001(\tB\020\202V\r\022\013stored_name\"q\n" +
+      "\006Choice\022\016\n\004text\030\001 \001(\tH\000\022\020\n\006number\030\002 \001(\005H" +
+      "\000\022=\n\005inner\030\003 \001(\0132,.codebinge.firestore.c" +
+      "odec.testdata.v1.InnerH\000B\006\n\004kind\"3\n\020Stri" +
+      "ngifiedInt64\022\016\n\002id\030\001 \001(\003B\0020\001\022\017\n\003ids\030\002 \003(" +
+      "\003B\0020\001\"[\n\tRecursive\022\r\n\005label\030\001 \001(\t\022?\n\005chi" +
+      "ld\030\002 \001(\01320.codebinge.firestore.codec.tes" +
+      "tdata.v1.Recursive\"\204\002\n\004Tree\022\r\n\005label\030\001 \001" +
+      "(\t\022=\n\010children\030\002 \003(\0132+.codebinge.firesto" +
+      "re.codec.testdata.v1.Tree\022E\n\005named\030\003 \003(\013" +
+      "26.codebinge.firestore.codec.testdata.v1" +
+      ".Tree.NamedEntry\022\014\n\004tags\030\004 \003(\t\032Y\n\nNamedE" +
+      "ntry\022\013\n\003key\030\001 \001(\t\022:\n\005value\030\002 \001(\0132+.codeb" +
+      "inge.firestore.codec.testdata.v1.Tree:\0028" +
+      "\001*D\n\006Status\022\022\n\016STATUS_UNKNOWN\020\000\022\021\n\rSTATU" +
+      "S_ACTIVE\020\001\022\023\n\017STATUS_ARCHIVED\020\002B-\n)com.c" +
+      "odebinge.firestore.codec.testdata.v1P\001b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

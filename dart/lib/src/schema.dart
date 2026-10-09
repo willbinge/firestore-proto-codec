@@ -85,10 +85,10 @@ class SchemaRegistry {
       _byMessage[qualifiedMessageName]?[tagNumber] ?? FieldRules.defaults;
 
   FieldRules _rulesFrom(pb.FieldOptions options) {
-    if (!options.hasExtension(opt.Options.field_50000)) {
+    if (!options.hasExtension(opt.Options.field_1376)) {
       return FieldRules.defaults;
     }
-    final f = options.getExtension(opt.Options.field_50000) as opt.Field;
+    final f = options.getExtension(opt.Options.field_1376) as opt.Field;
     return FieldRules(
       skip: f.skip,
       name: f.hasName() && f.name.isNotEmpty ? f.name : null,

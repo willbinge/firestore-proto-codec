@@ -91,8 +91,9 @@ tests — the license permits both, and [§9](docs/encoding.md#9-conformance)
 depends on it.
 
 Read [§10](docs/encoding.md#10-stability) before storing production data: this
-is a draft specification, and the option extension number in
-[§7](docs/encoding.md#7-options) is provisional.
+is still a draft specification. The option extension number is no longer
+provisional — 1376 is registered to this project in protobuf's Global Extension
+Registry, which reserves 1376–1380 ([§7](docs/encoding.md#7-options)).
 
 *Not affiliated with, endorsed by, or sponsored by Google LLC. "Firestore",
 "Firebase", and "Protocol Buffers" are trademarks of Google LLC, used here only

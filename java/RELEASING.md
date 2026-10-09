@@ -110,9 +110,10 @@ The `<id>` must be `central`, matching `publishingServerId` in the POM.
    specification version (see §10 of the encoding spec) — bump it on its own
    merits. Update `CHANGELOG.md`.
 
-3. **Confirm the extension number is not still provisional.** Releasing while
-   `options.proto` declares `50000` publishes a coordinate that a later
-   registration will break. See §7.
+3. **Confirm `options.proto` still declares 1376.** That is the number
+   registered to this project, and it must never change — a consumer on a
+   different number stops seeing annotations silently rather than failing. See
+   §7.
 
 4. **Deploy.**
 
