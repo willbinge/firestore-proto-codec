@@ -8,9 +8,9 @@ Published so far:
 
 | Registry | Coordinate | Version |
 |---|---|---|
-| npm | `firestore-proto-codec` | 0.2.0 |
-| pub.dev | `firestore_proto_codec` | 0.1.0 |
-| Maven Central | `com.codebinge:firestore-proto-codec` | 0.1.0 |
+| npm | `firestore-proto-codec` | 0.3.0 |
+| pub.dev | `firestore_proto_codec` | 0.2.0 |
+| Maven Central | `com.codebinge:firestore-proto-codec` | 0.2.0 |
 
 The version numbers differ on purpose. npm skipped 0.1.0 because it was burned
 by a mistake described below.

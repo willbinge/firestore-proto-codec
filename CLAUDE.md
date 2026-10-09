@@ -24,11 +24,12 @@ annotations silently** rather than failing — fields quietly revert to default
 encoding. Extension numbers are consumed per `extend` site, so a future
 `MessageOptions` extension takes **1377**, not a reuse of 1376.
 
-**Versions are per-implementation.** Published: Dart 0.1.0, TypeScript 0.2.0,
-Java 0.1.0 — they do not track each other or the spec version
-([§10](docs/encoding.md#10-stability)). npm is ahead because 0.1.0 was burned by
-a bad publish; see [`RELEASING.md`](RELEASING.md). Each version file holds the
-release being *prepared*, so it normally runs ahead of its registry; the top
+**Versions are per-implementation.** They do not track each other or the spec
+version ([§10](docs/encoding.md#10-stability)); npm runs one ahead because its
+0.1.0 was burned by a bad publish. What is *published* lives only in
+[`RELEASING.md`](RELEASING.md) — do not copy those numbers here, because a
+second copy is what goes stale. Each version file holds the release being
+*prepared*, so it normally runs ahead of its registry, and the top
 `CHANGELOG.md` entry is what says whether a version has shipped.
 
 **Silent failure is the enemy.** The whole spec exists because `toProto3Json()`
