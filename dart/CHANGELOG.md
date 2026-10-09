@@ -2,7 +2,7 @@
 
 ## 0.2.0
 
-Not yet published.
+Published 2026-10-09.
 
 - `SdkFirestoreTypes` binds an SDK by taking its three constructors --
   `SdkFirestoreTypes(timestamp: Timestamp.new, blob: Blob.new, geoPoint:

@@ -2,7 +2,7 @@
 
 ## 0.2.0
 
-Unreleased.
+Published 2026-10-09.
 
 - Ships the `FirestoreTypes` adapter for the server SDK as
   `CloudFirestoreTypes`, covering `google-cloud-firestore` and `firebase-admin`

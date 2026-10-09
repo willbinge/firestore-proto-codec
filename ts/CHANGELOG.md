@@ -2,7 +2,7 @@
 
 ## 0.3.0
 
-Unreleased.
+Published 2026-10-09.
 
 - Ships the admin adapter as `firestore-proto-codec/admin` -- `adminCodec` and
   `AdminFirestoreTypes` for `firebase-admin` / `@google-cloud/firestore`, which
