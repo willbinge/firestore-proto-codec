@@ -2,3 +2,15 @@ analyzer:
   language:
     strict-casts: true
     strict-raw-types: true
+
+  # protoc output is not hand-maintained, so a lint on it is not actionable
+  # except by changing the generator or pinning a dependency. Excluding it keeps
+  # `dart analyze --fatal-infos` meaningful for the code we actually write.
+  #
+  # Concretely: package:protobuf 6.1.0 deprecated `X.create`, which
+  # protoc-gen-dart still emits, so every generated subBuilder reference raises
+  # an info. pubspec.lock is not committed, so CI resolves fresh and would fail
+  # on a dependency upgrade nobody made deliberately.
+  exclude:
+    - lib/src/generated/**
+    - test/generated/**
