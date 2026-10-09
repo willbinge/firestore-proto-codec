@@ -97,3 +97,7 @@ mismatch surfaces at runtime. `ProtoGencodeTest` turns it into a build failure.
 mvn test
 ./tool/generate.sh
 ```
+
+Publishing to Maven Central is covered in
+[RELEASING.md](https://github.com/willbinge/firestore-proto-codec/blob/main/RELEASING.md)
+at the repository root, alongside npm and pub.dev.

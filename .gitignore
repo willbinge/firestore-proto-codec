@@ -8,3 +8,4 @@ dist/
 pubspec.lock
 target/
 firestore-debug.log
+*.versionsBackup

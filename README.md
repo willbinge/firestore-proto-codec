@@ -75,6 +75,7 @@ format is a protobuf, and `google.firestore.v1.Value` declares
 | [`java/`](java/) | Java implementation — passes all 37 vectors |
 | `proto/codebinge/firestore/codec/v1/options.proto` | per-field encoding options |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | how to change the encoding, and why vectors come first |
+| [`RELEASING.md`](RELEASING.md) | publishing to npm, pub.dev and Maven Central |
 
 A conforming implementation in any language must pass the vectors described in
 [§9](docs/encoding.md#9-conformance).
