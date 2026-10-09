@@ -18,7 +18,7 @@ published under `com.codebinge`, including future ones. The `<groupId>` in
 `pom.xml` is settled and must not change — it is the one coordinate consumers
 depend on by name, and it cannot be altered after a first release.
 
-### 2. Create a signing key — done, algorithm unproven
+### 2. Create a signing key — ✅ done
 
 Central requires every artifact to be signed, and the public key must be on a
 public keyserver before upload.
@@ -40,14 +40,14 @@ gpg --list-secret-keys --keyid-format=long     # note the key id
 gpg --keyserver keyserver.ubuntu.com --send-keys <KEY_ID>
 ```
 
-Sonatype states no formal algorithm requirement, but every example in their
-documentation uses RSA and EdDSA is not mentioned, so ed25519 support is
-unconfirmed. This is safe to discover empirically: `autoPublish` is `false`, so
-a rejected signature surfaces during portal validation with nothing published.
-If it is rejected, generate an RSA 4096 key with `--full-generate-key`, publish
-it alongside this one — keyservers hold multiple keys per identity — and
-redeploy. Keyservers supported by Central: `keyserver.ubuntu.com`,
-`keys.openpgp.org`, `pgp.mit.edu`.
+**Central accepts EdDSA.** Sonatype documents no algorithm requirement and
+every example they publish uses RSA, so this was unproven until the first
+release. It is now settled twice over: the 0.1.0 deployment reached `VALIDATED`
+— signature verification happens during portal validation — and the published
+`.asc` files on `repo1` verify against this key. No RSA fallback is needed.
+
+Keyservers supported by Central: `keyserver.ubuntu.com`, `keys.openpgp.org`,
+`pgp.mit.edu`.
 
 #### Make the key reachable from a non-interactive build
 
@@ -126,19 +126,27 @@ The `<id>` must be `central`, matching `publishingServerId` in the POM.
    to inspect and press Publish. Once a first release has gone through cleanly,
    flipping it to `true` makes later releases one command.
 
-5. **Tag it.**
+5. **Commit the version, then tag that commit.**
 
    ```sh
+   git commit -am "Release Java 0.1.0"
    git tag -a java-v0.1.0 -m "Java 0.1.0" && git push origin java-v0.1.0
    ```
+
+   Commit before tagging. `versions:set` edits `pom.xml` in the working tree,
+   so tagging without committing leaves the tag pointing at a tree whose POM
+   still says `-SNAPSHOT` — it would not match the artifact that was published,
+   and the release would not be reproducible from the tag. The 0.1.0 release
+   hit exactly this and needed a reconstructed commit afterwards.
 
    Tags are prefixed per language, since the three implementations version
    independently.
 
-6. **Restore the snapshot** for continued development:
+6. **Restore the snapshot** for continued development, and commit that too:
 
    ```sh
    mvn -B versions:set -DnewVersion=0.2.0-SNAPSHOT
+   git commit -am "Back to 0.2.0-SNAPSHOT"
    ```
 
 ## Verifying afterwards
