@@ -14,7 +14,7 @@ Unreleased.
 
 ## 0.2.0
 
-Unreleased.
+Published 2026-10-09.
 
 **The option extension number changed, from 50000 to 1376**, now registered to
 this project in protobuf's Global Extension Registry

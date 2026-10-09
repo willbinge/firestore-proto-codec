@@ -13,7 +13,7 @@ Not yet published.
 
 ## 0.1.0
 
-Not yet published. First release of the Dart implementation of
+Published 2026-10-09. First release of the Dart implementation of
 [encoding specification v0.1](https://github.com/willbinge/firestore-proto-codec/blob/main/docs/encoding.md).
 
 - Encode a protobuf message to a map of Firestore-native values, and decode it
