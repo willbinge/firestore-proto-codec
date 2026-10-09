@@ -6,7 +6,7 @@
 
   <groupId>com.codebinge</groupId>
   <artifactId>firestore-proto-codec</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
 
   <name>firestore-proto-codec</name>
   <description>Encode a protobuf message as a Firestore value, and decode it back.</description>
